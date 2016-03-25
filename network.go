@@ -11,7 +11,7 @@ import (
 	"math/rand"
 	"time"
 	_ "strconv"
-"strconv"
+	"strconv"
 )
 
 func init() {
@@ -19,10 +19,10 @@ func init() {
 }
 
 type Network struct {
-	NumInputs     int // total of bits in the image
+	NumInputs     int         // total of bits in the image
 	NumOutputs    int
 	HiddenCount   int
-	InputValues   []int       // image bits
+	InputValues   []int64     // image bits
 	InputWeights  [][]float64 // weights from inputs -> hidden nodes
 	HiddenOutputs []float64   // after feed-forward, what the hidden nodes output
 	OutputWeights [][]float64 // weights from hidden nodes -> output nodes
@@ -44,7 +44,7 @@ func (n *Network) assignRandomWeights() {
 		for j := 0; j < len(weights); j++ {
 
 			// we want the overall sum of weights to be < 1
-			weights[j] = rand.Float64() / float64(n.NumInputs*n.HiddenCount)
+			weights[j] = rand.Float64() / float64(n.NumInputs * n.HiddenCount)
 		}
 
 		n.InputWeights = append(n.InputWeights, weights)
@@ -58,16 +58,17 @@ func (n *Network) assignRandomWeights() {
 		for j := 0; j < len(weights); j++ {
 
 			// we want the overall sum of weights to be < 1
-			weights[j] = rand.Float64() / float64(n.HiddenCount*n.NumOutputs)
+			weights[j] = rand.Float64() / float64(n.HiddenCount * n.NumOutputs)
 		}
 
 		n.OutputWeights = append(n.OutputWeights, weights)
 	}
 
+	n.InputValues = make([]int64, n.NumInputs)
 	n.OutputValues = make([]float64, n.NumOutputs)
 	n.OutputErrors = make([]float64, n.NumOutputs)
 	n.HiddenOutputs = make([]float64, n.NumOutputs)
-	n.HiddenErrors = make([]float64, n.NumOutputs)
+	n.HiddenErrors = make([]float64, n.HiddenCount)
 }
 
 func (n *Network) calculateOutputErrors(trainedChar rune) {
@@ -92,13 +93,20 @@ func (n *Network) calculateHiddenErrors() {
 
 func (n *Network) adjustOutputWeights() {
 	for i := 0; i < len(n.HiddenOutputs); i++ {
-		for j := 0; j < n.NumOutputs; j ++ {
+		for j := 0; j < n.NumOutputs; j++ {
 			n.OutputWeights[i][j] += n.OutputErrors[j] * n.HiddenOutputs[i]
 		}
 	}
 }
 
-
+func (n *Network) adjustInputWeights() {
+	for i := 0; i < n.NumInputs; i++ {
+		for j := 0; j < n.HiddenCount; j++ {
+			//fmt.Printf("i: %d, j: %d, len(n.InputWeights): %d, len(n.HiddenErrors): %d, len(n.InputValues): %d\n", i, j, len(n.InputWeights), len(n.HiddenErrors), len(n.InputValues))
+			n.InputWeights[i][j] += n.HiddenErrors[j] * float64(n.InputValues[i])
+		}
+	}
+}
 
 func (n *Network) calculateHiddenOutputs() {
 	for i := 0; i < len(n.HiddenOutputs); i++ {
@@ -111,7 +119,6 @@ func (n *Network) calculateHiddenOutputs() {
 		n.HiddenOutputs[i] = sigmoid(sum)
 	}
 }
-
 
 func (n *Network) calculateFinalOutputs() {
 	for i := 0; i < n.NumOutputs; i++ {

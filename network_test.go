@@ -14,6 +14,7 @@ func TestNetwork(t *testing.T) {
 	n.calculateFinalOutputs()
 	n.calculateHiddenErrors()
 	n.adjustOutputWeights()
+	n.adjustInputWeights()
 }
 
 func TestSaveRestore(t *testing.T) {
