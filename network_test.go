@@ -65,3 +65,25 @@ func TestCharToBinaryString(t *testing.T) {
 		}
 	}
 }
+
+func TestBinaryStringToInt(t *testing.T) {
+	n := NewNetwork(25, 25)
+	cases := []struct {
+		s string
+		expected int64
+	}{
+		{"00110000", 48},
+		{"01100001", 97},
+		{"01000001", 65},
+		{"01111010", 122},
+		{"01011010", 90},
+	}
+
+	for _, c := range cases {
+		actual := n.binaryStringToInt(c.s)
+		if actual != c.expected {
+			t.Fatalf("for input %s, expected: %d, got: %d", c.s, c.expected, actual)
+		}
+	}
+}
+

@@ -11,6 +11,7 @@ import (
 	"math/rand"
 	"time"
 	_ "strconv"
+"strconv"
 )
 
 func init() {
@@ -70,11 +71,9 @@ func (n *Network) calculateOutputErrors() {
 	//var accumError float64
 	//
 	//for i := 0; i < n.NumOutputs; i++ {
-	//	sum := float64(0)
 	//
-	//	for j := 0; j < len(n.HiddenOutputs); j++ {
-	//		sum += n.HiddenOutputs[j] * n.OutputWeights[i][j]
-	//	}
+	//
+	//
 	//}
 }
 
@@ -162,4 +161,13 @@ func (n *Network) intToBinaryString(i int64) string {
 
 func (n *Network) charToBinaryString(c rune) string {
 	return n.intToBinaryString(int64(c))
+}
+
+func (n *Network) binaryStringToInt(s string) int64 {
+	result, err := strconv.ParseInt(s, 2, 64)
+	if err != nil {
+		log.Fatalf("error converting binary string %s to int: %s", s, err)
+	}
+
+	return result
 }
