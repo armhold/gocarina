@@ -32,6 +32,12 @@ func (c *Converted) At(x, y int) color.Color {
 	return c.Mod.Convert(c.Img.At(x, y))
 }
 
+func (c *Converted) SubImage(r image.Rectangle) image.Image {
+	return c.Img.(interface {
+		SubImage(r image.Rectangle) image.Image
+	}).SubImage(r)
+}
+
 func BlackWhiteImage(img image.Image) image.Image {
 	return &Converted{img, bwPalette}
 }
