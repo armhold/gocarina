@@ -9,6 +9,7 @@ import (
 	"encoding/gob"
 	"io/ioutil"
 	"log"
+	"math"
 )
 
 func init() {
@@ -33,7 +34,6 @@ func NewNetwork(charWidth, charHeight int) *Network {
 }
 
 func (n *Network) assignRandomWeights() {
-
 	// input -> hidden weights
 	//
 	for i := 0; i < n.NumInputs; i++ {
@@ -48,7 +48,6 @@ func (n *Network) assignRandomWeights() {
 		n.InputWeights = append(n.InputWeights, weights)
 	}
 
-
 	// hidden -> output weights
 	//
 	for i := 0; i < n.HiddenCount; i++ {
@@ -62,8 +61,30 @@ func (n *Network) assignRandomWeights() {
 
 		n.OutputWeights = append(n.OutputWeights, weights)
 	}
+}
+
+
+func (n *Network)  calculateOutputErrors() {
+
+	for i := 0; i < n.NumOutputs; i++ {
+		sum := float64(0)
+
+		for j := 0; j < len(n.HiddenOutputs); j++ {
+			sum += n.HiddenOutputs[j] * n.OutputWeights[i][j]
+		}
+
+
+	}
 
 }
+
+// function that maps its input to a range between 0..1
+// mathematically it's supposed to be asymptotic, but large values of x may round up to 1
+func sigmoid(x float64) float64 {
+	return 1.0 / (1.0 + math.Exp(-x))
+}
+
+
 
 func (n *Network) printInputWeights() {
 	for _, weights := range n.InputWeights {
