@@ -22,7 +22,6 @@ func Crop(img image.Image) (result [][]image.Image) {
 		img = Scale(img, image.Rect(0, 0, LetterPressExpectedWidth, LetterpressExpectedHeight))
 	}
 
-	// TODO: tiles seem to be coming out in color?
 	img = BlackWhiteImage(img)
 
 	yOffset := LetterpressHeightOffset

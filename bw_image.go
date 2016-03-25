@@ -33,9 +33,12 @@ func (c *Converted) At(x, y int) color.Color {
 }
 
 func (c *Converted) SubImage(r image.Rectangle) image.Image {
-	return c.Img.(interface {
+	sub := c.Img.(interface {
 		SubImage(r image.Rectangle) image.Image
 	}).SubImage(r)
+
+	// preserve the B&W color model
+	return &Converted{sub, bwPalette}
 }
 
 func BlackWhiteImage(img image.Image) image.Image {
