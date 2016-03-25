@@ -10,8 +10,9 @@ func TestNetwork(t *testing.T) {
 	n := NewNetwork(25, 25)
 	n.assignRandomWeights()
 	n.calculateHiddenOutputs()
-	n.calculateOutputErrors()
+	n.calculateOutputErrors('A')
 	n.calculateFinalOutputs()
+	n.calculateHiddenErrors()
 }
 
 func TestSaveRestore(t *testing.T) {

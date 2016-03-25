@@ -64,18 +64,33 @@ func (n *Network) assignRandomWeights() {
 		n.OutputWeights = append(n.OutputWeights, weights)
 	}
 
-	n.OutputValues  = make([]float64, n.NumOutputs)
+	n.OutputValues = make([]float64, n.NumOutputs)
+	n.OutputErrors = make([]float64, n.NumOutputs)
+	n.HiddenOutputs = make([]float64, n.NumOutputs)
+	n.HiddenErrors = make([]float64, n.NumOutputs)
 }
 
-func (n *Network) calculateOutputErrors() {
-	//var accumError float64
-	//
-	//for i := 0; i < n.NumOutputs; i++ {
-	//
-	//
-	//
-	//}
+func (n *Network) calculateOutputErrors(trainedChar rune) {
+	expected := float64(trainedChar)
+
+	for i := 0; i < n.NumOutputs; i++ {
+		n.OutputErrors[i] = (expected - n.OutputValues[i]) * (1.0 - n.OutputValues[i]) * n.OutputValues[i]
+	}
 }
+
+func (n *Network) calculateHiddenErrors() {
+	for i := 0; i < len(n.HiddenOutputs); i++ {
+		sum := float64(0)
+
+		for j := 0; j < len(n.OutputErrors); j ++ {
+			sum += n.OutputErrors[j] * n.OutputWeights[i][j]
+		}
+
+		n.HiddenErrors[i] = n.HiddenOutputs[i] * (1 - n.HiddenOutputs[i]) * sum
+	}
+}
+
+
 
 func (n *Network) calculateHiddenOutputs() {
 	for i := 0; i < len(n.HiddenOutputs); i++ {
