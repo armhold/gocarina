@@ -10,7 +10,7 @@ import (
 
 
 func TestCrop(t *testing.T) {
-	infile, err := os.Open("ocarina.png")
+	infile, err := os.Open("board-images/board1.png")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -23,11 +23,13 @@ func TestCrop(t *testing.T) {
 
 	tiles := Crop(lp)
 
-	tileCount := 1
+	n := 0
 
 	for _, row := range tiles {
 		for _, tile := range row {
-			toFile, err := os.Create(fmt.Sprintf("tile%02d.png", tileCount))
+			n++
+
+			toFile, err := os.Create(fmt.Sprintf("tile%02d.png", n))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -37,8 +39,6 @@ func TestCrop(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-
-			tileCount++
 		}
 	}
 

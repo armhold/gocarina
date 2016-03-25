@@ -3,6 +3,7 @@ package gocarina
 import (
 	"image"
 	"math"
+	"log"
 )
 
 const (
@@ -14,13 +15,14 @@ const (
 	LetterpressExpectedHeight = 1136
 )
 
-
-// TODO: not tested, no bounding_box
+// TODO: no bounding_box
 func Crop(img image.Image) (result [][]image.Image) {
 	if img.Bounds().Dx() != LetterPressExpectedWidth || img.Bounds().Dy() != LetterpressExpectedHeight {
+		log.Printf("Scaling...\n")
 		img = Scale(img, image.Rect(0, 0, LetterPressExpectedWidth, LetterpressExpectedHeight))
 	}
 
+	// TODO: tiles seem to be coming out in color?
 	img = BlackWhiteImage(img)
 
 	yOffset := LetterpressHeightOffset
@@ -31,7 +33,7 @@ func Crop(img image.Image) (result [][]image.Image) {
 		var row []image.Image
 
 		for j := 0; j < LetterpressTilesAcross; j++ {
-			tileRect := image.Rect(xOffset + border, yOffset + border, LetterpressTilePixels - border, LetterpressTilePixels - border)
+			tileRect := image.Rect(xOffset + border, yOffset + border, xOffset + LetterpressTilePixels - border, yOffset + LetterpressTilePixels - border)
 
 			tile := img.(interface {
 				SubImage(r image.Rectangle) image.Image
