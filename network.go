@@ -5,6 +5,10 @@ import (
 	_ "log"
 	"math/rand"
 	"time"
+	"bytes"
+	"encoding/gob"
+	"io/ioutil"
+	"log"
 )
 
 func init() {
@@ -70,4 +74,37 @@ func (n *Network) printInputWeights() {
 
 		fmt.Println()
 	}
+}
+
+func (n *Network) Save(filePath string) {
+	buf := new(bytes.Buffer)
+	encoder := gob.NewEncoder(buf)
+
+	err := encoder.Encode(n)
+	if err != nil {
+		log.Fatalf("error encoding network: %s", err)
+	}
+
+	err = ioutil.WriteFile(filePath, buf.Bytes(), 0644)
+	if err != nil {
+		log.Fatalf("error writing network to file: %s", err)
+	}
+}
+
+
+func RestoreNetwork(filePath string) *Network {
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		log.Fatalf("error reading network file: %s", err)
+	}
+
+	decoder := gob.NewDecoder(bytes.NewBuffer(b))
+
+	var result Network
+	err = decoder.Decode(&result)
+	if err != nil {
+		log.Fatalf("error decoding network: %s", err)
+	}
+
+	return &result
 }
