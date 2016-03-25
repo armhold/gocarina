@@ -13,6 +13,7 @@ func TestNetwork(t *testing.T) {
 	n.calculateOutputErrors('A')
 	n.calculateFinalOutputs()
 	n.calculateHiddenErrors()
+	n.adjustOutputWeights()
 }
 
 func TestSaveRestore(t *testing.T) {

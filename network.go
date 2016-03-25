@@ -90,6 +90,14 @@ func (n *Network) calculateHiddenErrors() {
 	}
 }
 
+func (n *Network) adjustOutputWeights() {
+	for i := 0; i < len(n.HiddenOutputs); i++ {
+		for j := 0; j < n.NumOutputs; j ++ {
+			n.OutputWeights[i][j] += n.OutputErrors[j] * n.HiddenOutputs[i]
+		}
+	}
+}
+
 
 
 func (n *Network) calculateHiddenOutputs() {
