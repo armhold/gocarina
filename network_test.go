@@ -7,14 +7,11 @@ import (
 )
 
 func TestNetwork(t *testing.T) {
-
 	n := NewNetwork(25, 25)
 	n.assignRandomWeights()
 	n.calculateHiddenOutputs()
 	n.calculateOutputErrors()
 	n.calculateFinalOutputs()
-
-	n.printInputWeights()
 }
 
 func TestSaveRestore(t *testing.T) {
@@ -42,6 +39,29 @@ func TestSigmoid(t *testing.T) {
 
 		if y < 0.0 || y > 1.0 {
 			t.Fatalf("for input %f got %f, should be in (0..1.0)", x, y)
+		}
+	}
+}
+
+func TestCharToBinaryString(t *testing.T) {
+	n := NewNetwork(25, 25)
+	n.NumOutputs = 8
+
+	cases := []struct {
+		rune
+		expected string
+	}{
+		{'0', "00110000"}, // we expect all strings to be left-padded with zeroes up to fill a width of n.NumOutputs
+		{'a', "01100001"},
+		{'A', "01000001"},
+		{'z', "01111010"},
+		{'Z', "01011010"},
+	}
+
+	for _, c := range cases {
+		actual := n.charToBinaryString(c.rune)
+		if actual != c.expected {
+			t.Fatalf("for input %d, expected: %s, got: %s", c.rune, c.expected, actual)
 		}
 	}
 }

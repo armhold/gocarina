@@ -10,6 +10,7 @@ import (
 	"math"
 	"math/rand"
 	"time"
+	_ "strconv"
 )
 
 func init() {
@@ -66,13 +67,15 @@ func (n *Network) assignRandomWeights() {
 }
 
 func (n *Network) calculateOutputErrors() {
-	for i := 0; i < n.NumOutputs; i++ {
-		sum := float64(0)
-
-		for j := 0; j < len(n.HiddenOutputs); j++ {
-			sum += n.HiddenOutputs[j] * n.OutputWeights[i][j]
-		}
-	}
+	//var accumError float64
+	//
+	//for i := 0; i < n.NumOutputs; i++ {
+	//	sum := float64(0)
+	//
+	//	for j := 0; j < len(n.HiddenOutputs); j++ {
+	//		sum += n.HiddenOutputs[j] * n.OutputWeights[i][j]
+	//	}
+	//}
 }
 
 func (n *Network) calculateHiddenOutputs() {
@@ -149,4 +152,14 @@ func RestoreNetwork(filePath string) *Network {
 	}
 
 	return &result
+}
+
+func (n *Network) intToBinaryString(i int64) string {
+	// we want to pad with n.NumOutputs number of zeroes, so create a dynamic format for Sprintf
+	format := fmt.Sprintf("%%0%db", n.NumOutputs)
+	return fmt.Sprintf(format, i)
+}
+
+func (n *Network) charToBinaryString(c rune) string {
+	return n.intToBinaryString(int64(c))
 }
