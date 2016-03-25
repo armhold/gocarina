@@ -99,8 +99,8 @@ func (n *Network) assignRandomWeights() {
 	n.HiddenErrors = make([]float64, n.HiddenCount)
 }
 
-func (n *Network) calculateOutputErrors(trainedChar rune) {
-	expected := float64(trainedChar)
+func (n *Network) calculateOutputErrors(r rune) {
+	expected := float64(r)
 
 	for i := 0; i < n.NumOutputs; i++ {
 		n.OutputErrors[i] = (expected - n.OutputValues[i]) * (1.0 - n.OutputValues[i]) * n.OutputValues[i]
@@ -176,6 +176,26 @@ func (n *Network) printInputWeights() {
 		fmt.Println()
 	}
 }
+
+// TODO: untested
+func (n *Network) Train(img image.Image, r rune) {
+	// quantize to two-color
+	bwImg := BlackWhiteImage(img)
+
+	// feed the image data forward through the network to obtain a result
+	//
+	n.assignInputs(bwImg)
+	n.calculateHiddenOutputs()
+	n.calculateFinalOutputs()
+
+	// propagate the error correction backward through the net
+	//
+	n.calculateOutputErrors(r)
+	n.calculateHiddenErrors()
+	n.adjustOutputWeights()
+	n.adjustInputWeights()
+}
+
 
 func (n *Network) Save(filePath string) {
 	buf := new(bytes.Buffer)
