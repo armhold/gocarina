@@ -2,10 +2,9 @@ package gocarina
 
 import (
 	"image"
-	"testing"
+	_ "image/png" // register PNG format
 	"os"
-	"image/color"
-	_ "image/png"  // register PNG format
+	"testing"
 )
 
 func TestBlackWhiteImage(t *testing.T) {
@@ -25,7 +24,7 @@ func TestBlackWhiteImage(t *testing.T) {
 	for x := 0; x < bwImg.Bounds().Dx(); x++ {
 		for y := 0; y < bwImg.Bounds().Dy(); y++ {
 			c := bwImg.At(x, y)
-			if ! isBlackOrWhite(c) {
+			if !(IsBlack(c) || IsWhite(c)) {
 				t.Fatal("not black or white: %+v", c)
 			}
 		}
@@ -41,17 +40,4 @@ func TestBlackWhiteImage(t *testing.T) {
 	//if err != nil {
 	//	t.Fatal(err)
 	//}
-}
-
-func isBlackOrWhite(c color.Color) bool {
-	br, bg, bb, ba := color.Black.RGBA()
-	wr, wg, wb, wa := color.White.RGBA()
-
-	r, g, b, a := c.RGBA()
-
-	if r == br && g == bg && b == bb && a == ba {
-		return true
-	}
-
-	return r == wr && g == wg && b == wb && a == wa
 }

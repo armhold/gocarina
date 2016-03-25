@@ -4,14 +4,14 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
+	"image"
+	"image/color"
 	"io/ioutil"
 	"log"
-	_ "log"
 	"math"
 	"math/rand"
-	"time"
-	_ "strconv"
 	"strconv"
+	"time"
 )
 
 func init() {
@@ -19,7 +19,7 @@ func init() {
 }
 
 type Network struct {
-	NumInputs     int         // total of bits in the image
+	NumInputs     int // total of bits in the image
 	NumOutputs    int
 	HiddenCount   int
 	InputValues   []int64     // image bits
@@ -35,6 +35,34 @@ func NewNetwork(charWidth, charHeight int) *Network {
 	return &Network{NumInputs: charWidth * charHeight, HiddenCount: 25, NumOutputs: 8}
 }
 
+// feed the image into the network
+func (n *Network) assignInputs(img image.Image) {
+	numPixels := img.Bounds().Dx() * img.Bounds().Dy()
+
+	for i := 0; i < numPixels; i++ {
+		col := pixelNumberToCol(i, img)
+		row := pixelNumberToRow(i, img)
+		pixel := pixelToBit(img.At(col, row))
+		n.InputValues[i] = pixel
+	}
+}
+
+func pixelNumberToCol(n int, img image.Image) int {
+	return n % img.Bounds().Dx()
+}
+
+func pixelNumberToRow(n int, img image.Image) int {
+	return n / img.Bounds().Dx()
+}
+
+func pixelToBit(c color.Color) int64 {
+	if IsBlack(c) {
+		return 0
+	}
+
+	return 1
+}
+
 func (n *Network) assignRandomWeights() {
 	// input -> hidden weights
 	//
@@ -44,7 +72,7 @@ func (n *Network) assignRandomWeights() {
 		for j := 0; j < len(weights); j++ {
 
 			// we want the overall sum of weights to be < 1
-			weights[j] = rand.Float64() / float64(n.NumInputs * n.HiddenCount)
+			weights[j] = rand.Float64() / float64(n.NumInputs*n.HiddenCount)
 		}
 
 		n.InputWeights = append(n.InputWeights, weights)
@@ -58,7 +86,7 @@ func (n *Network) assignRandomWeights() {
 		for j := 0; j < len(weights); j++ {
 
 			// we want the overall sum of weights to be < 1
-			weights[j] = rand.Float64() / float64(n.HiddenCount * n.NumOutputs)
+			weights[j] = rand.Float64() / float64(n.HiddenCount*n.NumOutputs)
 		}
 
 		n.OutputWeights = append(n.OutputWeights, weights)
@@ -83,7 +111,7 @@ func (n *Network) calculateHiddenErrors() {
 	for i := 0; i < len(n.HiddenOutputs); i++ {
 		sum := float64(0)
 
-		for j := 0; j < len(n.OutputErrors); j ++ {
+		for j := 0; j < len(n.OutputErrors); j++ {
 			sum += n.OutputErrors[j] * n.OutputWeights[i][j]
 		}
 
@@ -131,8 +159,6 @@ func (n *Network) calculateFinalOutputs() {
 		n.OutputValues[i] = sigmoid(sum)
 	}
 }
-
-
 
 // function that maps its input to a range between 0..1
 // mathematically it's supposed to be asymptotic, but large values of x may round up to 1

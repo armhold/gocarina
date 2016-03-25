@@ -72,7 +72,7 @@ func TestCharToBinaryString(t *testing.T) {
 func TestBinaryStringToInt(t *testing.T) {
 	n := NewNetwork(25, 25)
 	cases := []struct {
-		s string
+		s        string
 		expected int64
 	}{
 		{"00110000", 48},
@@ -89,4 +89,3 @@ func TestBinaryStringToInt(t *testing.T) {
 		}
 	}
 }
-
