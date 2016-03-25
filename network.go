@@ -196,7 +196,6 @@ func (n *Network) Train(img image.Image, r rune) {
 	n.adjustInputWeights()
 }
 
-
 func (n *Network) Save(filePath string) {
 	buf := new(bytes.Buffer)
 	encoder := gob.NewEncoder(buf)

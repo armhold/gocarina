@@ -1,13 +1,12 @@
 package gocarina
 
 import (
-	"testing"
-	"os"
-	"image"
 	"fmt"
+	"image"
 	"image/png"
+	"os"
+	"testing"
 )
-
 
 func TestCrop(t *testing.T) {
 	infile, err := os.Open("board-images/board1.png")

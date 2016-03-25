@@ -2,16 +2,16 @@ package gocarina
 
 import (
 	"image"
-	"math"
 	"log"
+	"math"
 )
 
 const (
-	LetterpressTilesAcross = 5
-	LetterpressTilesDown = 5
-	LetterpressTilePixels = 128
-	LetterpressHeightOffset = 496
-	LetterPressExpectedWidth = LetterpressTilesAcross * LetterpressTilePixels
+	LetterpressTilesAcross    = 5
+	LetterpressTilesDown      = 5
+	LetterpressTilePixels     = 128
+	LetterpressHeightOffset   = 496
+	LetterPressExpectedWidth  = LetterpressTilesAcross * LetterpressTilePixels
 	LetterpressExpectedHeight = 1136
 )
 
@@ -33,7 +33,7 @@ func Crop(img image.Image) (result [][]image.Image) {
 		var row []image.Image
 
 		for j := 0; j < LetterpressTilesAcross; j++ {
-			tileRect := image.Rect(xOffset + border, yOffset + border, xOffset + LetterpressTilePixels - border, yOffset + LetterpressTilePixels - border)
+			tileRect := image.Rect(xOffset+border, yOffset+border, xOffset+LetterpressTilePixels-border, yOffset+LetterpressTilePixels-border)
 
 			tile := img.(interface {
 				SubImage(r image.Rectangle) image.Image
@@ -48,10 +48,8 @@ func Crop(img image.Image) (result [][]image.Image) {
 		yOffset += LetterpressTilePixels
 	}
 
-
 	return
 }
-
 
 // Scale scales the src image to the given rectangle using Nearest Neighbor
 func Scale(srcImg image.Image, r image.Rectangle) image.Image {
