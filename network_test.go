@@ -1,15 +1,17 @@
 package gocarina
 
 import (
-	"testing"
 	"io/ioutil"
 	"reflect"
+	"testing"
 )
 
 func TestNetwork(t *testing.T) {
 
 	n := NewNetwork(25, 25)
 	n.assignRandomWeights()
+	n.calculateHiddenOutputs()
+	n.calculateOutputErrors()
 
 	n.printInputWeights()
 }
@@ -42,4 +44,3 @@ func TestSigmoid(t *testing.T) {
 		}
 	}
 }
-

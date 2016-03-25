@@ -1,15 +1,15 @@
 package gocarina
 
 import (
-	"fmt"
-	_ "log"
-	"math/rand"
-	"time"
 	"bytes"
 	"encoding/gob"
+	"fmt"
 	"io/ioutil"
 	"log"
+	_ "log"
 	"math"
+	"math/rand"
+	"time"
 )
 
 func init() {
@@ -17,7 +17,7 @@ func init() {
 }
 
 type Network struct {
-	NumInputs     int         // total of bits in the image
+	NumInputs     int // total of bits in the image
 	NumOutputs    int
 	HiddenCount   int
 	InputValues   []int       // image bits
@@ -42,7 +42,7 @@ func (n *Network) assignRandomWeights() {
 		for j := 0; j < len(weights); j++ {
 
 			// we want the overall sum of weights to be < 1
-			weights[j] = rand.Float64() / float64(n.NumInputs * n.HiddenCount)
+			weights[j] = rand.Float64() / float64(n.NumInputs*n.HiddenCount)
 		}
 
 		n.InputWeights = append(n.InputWeights, weights)
@@ -56,26 +56,33 @@ func (n *Network) assignRandomWeights() {
 		for j := 0; j < len(weights); j++ {
 
 			// we want the overall sum of weights to be < 1
-			weights[j] = rand.Float64() / float64(n.HiddenCount * n.NumOutputs)
+			weights[j] = rand.Float64() / float64(n.HiddenCount*n.NumOutputs)
 		}
 
 		n.OutputWeights = append(n.OutputWeights, weights)
 	}
 }
 
-
-func (n *Network)  calculateOutputErrors() {
-
+func (n *Network) calculateOutputErrors() {
 	for i := 0; i < n.NumOutputs; i++ {
 		sum := float64(0)
 
 		for j := 0; j < len(n.HiddenOutputs); j++ {
 			sum += n.HiddenOutputs[j] * n.OutputWeights[i][j]
 		}
-
-
 	}
+}
 
+func (n *Network) calculateHiddenOutputs() {
+	for i := 0; i < len(n.HiddenOutputs); i++ {
+		sum := float64(0)
+
+		for j := 0; j < len(n.InputValues); j++ {
+			sum += float64(n.InputValues[j]) * n.InputWeights[j][i]
+		}
+
+		n.HiddenOutputs[i] = sigmoid(sum)
+	}
 }
 
 // function that maps its input to a range between 0..1
@@ -83,8 +90,6 @@ func (n *Network)  calculateOutputErrors() {
 func sigmoid(x float64) float64 {
 	return 1.0 / (1.0 + math.Exp(-x))
 }
-
-
 
 func (n *Network) printInputWeights() {
 	for _, weights := range n.InputWeights {
@@ -111,7 +116,6 @@ func (n *Network) Save(filePath string) {
 		log.Fatalf("error writing network to file: %s", err)
 	}
 }
-
 
 func RestoreNetwork(filePath string) *Network {
 	b, err := ioutil.ReadFile(filePath)
