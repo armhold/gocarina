@@ -61,6 +61,8 @@ func (n *Network) assignRandomWeights() {
 
 		n.OutputWeights = append(n.OutputWeights, weights)
 	}
+
+	n.OutputValues  = make([]float64, n.NumOutputs)
 }
 
 func (n *Network) calculateOutputErrors() {
@@ -84,6 +86,21 @@ func (n *Network) calculateHiddenOutputs() {
 		n.HiddenOutputs[i] = sigmoid(sum)
 	}
 }
+
+
+func (n *Network) calculateFinalOutputs() {
+	for i := 0; i < n.NumOutputs; i++ {
+		sum := float64(0)
+
+		for j := 0; j < len(n.HiddenOutputs); j++ {
+			sum += n.HiddenOutputs[j] * n.OutputWeights[j][i]
+		}
+
+		n.OutputValues[i] = sigmoid(sum)
+	}
+}
+
+
 
 // function that maps its input to a range between 0..1
 // mathematically it's supposed to be asymptotic, but large values of x may round up to 1

@@ -12,6 +12,7 @@ func TestNetwork(t *testing.T) {
 	n.assignRandomWeights()
 	n.calculateHiddenOutputs()
 	n.calculateOutputErrors()
+	n.calculateFinalOutputs()
 
 	n.printInputWeights()
 }
