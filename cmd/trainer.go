@@ -14,7 +14,7 @@ func main() {
 	tileHeight := tile.Bounds().Dy()
 	n := gocarina.NewNetwork(tileWidth, tileHeight)
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 3; i++ {
 		for r, tile := range m {
 			log.Printf("training: %c\n", r)
 			n.Train(tile, r)
@@ -22,6 +22,10 @@ func main() {
 	}
 
 	n.Save("trained_network.out")
+
+
+	r := n.Recognize(tile)
+	log.Printf("tile recognized as: %c", r)
 
 	log.Printf("success")
 }

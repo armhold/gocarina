@@ -45,6 +45,40 @@ func NewNetwork(charWidth, charHeight int) *Network {
 	return n
 }
 
+// Attempt to recognize the character displayed on the given image.
+func (n *Network) Recognize(img image.Image) rune {
+
+	img = BlackWhiteImage(img)
+
+	n.assignInputs(img)
+	n.calculateHiddenOutputs()
+	n.calculateFinalOutputs()
+
+
+	// quantize output values
+	bitstring := ""
+	for _, v := range n.OutputValues {
+		bitstring += strconv.Itoa(Round(v))
+	}
+
+	asciiCode, err := strconv.ParseInt(bitstring, 2, 16)
+	if err != nil {
+		log.Fatalf("error in ParseInt for %s: ", err)
+	}
+
+	log.Printf("returning bitstring: %s", bitstring)
+	return rune(asciiCode)
+}
+
+// can't believe this isn't in the stdlib!
+func Round(f float64) int {
+	if math.Abs(f) < 0.5 {
+		return 0
+	}
+	return int(f + math.Copysign(0.5, f))
+}
+
+
 // feed the image into the network
 func (n *Network) assignInputs(img image.Image) {
 	numPixels := img.Bounds().Dx() * img.Bounds().Dy()
