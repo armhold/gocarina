@@ -32,6 +32,7 @@ type Network struct {
 }
 
 func NewNetwork(numInputs int) *Network {
+	// NB: NumOutputs effectively constrains the range of chars that are recognizable
 	n := &Network{NumInputs: numInputs, HiddenCount: 25, NumOutputs: 8}
 
 	n.InputValues = make([]int64, n.NumInputs)
@@ -58,6 +59,7 @@ func (n *Network) Recognize(img image.Image) rune {
 	// quantize output values
 	bitstring := ""
 	for _, v := range n.OutputValues {
+		log.Printf("v: %f", v)
 		bitstring += strconv.Itoa(Round(v))
 	}
 
@@ -138,10 +140,15 @@ func (n *Network) assignRandomWeights() {
 }
 
 func (n *Network) calculateOutputErrors(r rune) {
-	expected := float64(r)
+	arrayOfInts := n.runeToArrayOfInts(r)
 
-	for i := 0; i < n.NumOutputs; i++ {
-		n.OutputErrors[i] = (expected - n.OutputValues[i]) * (1.0 - n.OutputValues[i]) * n.OutputValues[i]
+	// NB: binaryString[i] will return bytes, not a rune. range does the right thing
+	for i, digit := range arrayOfInts {
+		log.Printf("digit: %d", digit)
+
+		digitAsFloat := float64(digit)
+
+		n.OutputErrors[i] = (digitAsFloat - n.OutputValues[i]) * (1.0 - n.OutputValues[i]) * n.OutputValues[i]
 	}
 }
 
@@ -191,9 +198,12 @@ func (n *Network) calculateFinalOutputs() {
 		sum := float64(0)
 
 		for j := 0; j < len(n.HiddenOutputs); j++ {
-			sum += n.HiddenOutputs[j] * n.OutputWeights[j][i]
+			val := n.HiddenOutputs[j] * n.OutputWeights[j][i]
+			sum += val
+			log.Printf("val: %f", val)
 		}
 
+		log.Printf("sum: %f", sum)
 		n.OutputValues[i] = sigmoid(sum)
 	}
 }
@@ -215,7 +225,6 @@ func (n *Network) printInputWeights() {
 	}
 }
 
-// TODO: untested
 func (n *Network) Train(img image.Image, r rune) {
 	// quantize to two-color
 	bwImg := BlackWhiteImage(img)
@@ -268,21 +277,27 @@ func RestoreNetwork(filePath string) (*Network, error) {
 	return &result, nil
 }
 
-func (n *Network) intToBinaryString(i int64) string {
+// map a rune char to an array of int, representing its unicode codepoint in binary
+// 'A' => 65 => []int {0, 1, 0, 0, 0, 0, 0, 1}
+// result is zero-padded to n.NumOutputs
+//
+func (n *Network) runeToArrayOfInts(r rune) []int {
+	var result []int = make([]int, n.NumOutputs)
+
+	codePoint := int64(r)  // e.g. 65
+
 	// we want to pad with n.NumOutputs number of zeroes, so create a dynamic format for Sprintf
 	format := fmt.Sprintf("%%0%db", n.NumOutputs)
-	return fmt.Sprintf(format, i)
-}
+	binaryString := fmt.Sprintf(format, codePoint)  // e.g. "01000001"
 
-func (n *Network) charToBinaryString(c rune) string {
-	return n.intToBinaryString(int64(c))
-}
-
-func (n *Network) binaryStringToInt(s string) int64 {
-	result, err := strconv.ParseInt(s, 2, 64)
-	if err != nil {
-		log.Fatalf("error converting binary string %s to int: %s", s, err)
+	// must use range: array indexing of strings returns bytes
+	for i, v := range binaryString {
+		if v == '0' {
+			result[i] = 0
+		} else {
+			result[i] = 1
+		}
 	}
-
 	return result
 }
+

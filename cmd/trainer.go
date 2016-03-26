@@ -1,10 +1,10 @@
 package main
 
 import (
+	"flag"
 	"log"
 
 	"github.com/armhold/gocarina"
-	"flag"
 )
 
 var (
@@ -13,13 +13,15 @@ var (
 	iter int
 )
 
-
-func main() {
+func init() {
 	flag.StringVar(&fromFile, "load", "", "to load network from a saved file")
 	flag.StringVar(&toFile, "save", "", "to save network to a file")
 	flag.IntVar(&iter, "iter", 100, "number of training iterations")
 
+	flag.Parse()
+}
 
+func main() {
 	// do this first, so we have tile boundaries to create the network
 	m := gocarina.ProcessGameBoards()
 

@@ -32,7 +32,7 @@ func TestSaveRestore(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(n, restored) {
-		t.Errorf("expected: %+v, got %+v", n, restored)
+		t.Fatalf("expected: %+v, got %+v", n, restored)
 	}
 }
 
@@ -48,46 +48,14 @@ func TestSigmoid(t *testing.T) {
 	}
 }
 
-func TestCharToBinaryString(t *testing.T) {
+func TestRuneToArrayOfInts(t *testing.T) {
 	n := NewNetwork(25 * 25)
-	n.NumOutputs = 8
 
-	cases := []struct {
-		rune
-		expected string
-	}{
-		{'0', "00110000"}, // we expect all strings to be left-padded with zeroes up to fill a width of n.NumOutputs
-		{'a', "01100001"},
-		{'A', "01000001"},
-		{'z', "01111010"},
-		{'Z', "01011010"},
-	}
+	expected := []int{0, 1, 0, 0, 0, 0, 0, 1}
+	actual := n.runeToArrayOfInts('A')
 
-	for _, c := range cases {
-		actual := n.charToBinaryString(c.rune)
-		if actual != c.expected {
-			t.Fatalf("for input %d, expected: %s, got: %s", c.rune, c.expected, actual)
-		}
+	if !reflect.DeepEqual(expected, actual) {
+		t.Fatalf("expected: %+v, got: %+v", expected, actual)
 	}
 }
 
-func TestBinaryStringToInt(t *testing.T) {
-	n := NewNetwork(25 * 25)
-	cases := []struct {
-		s        string
-		expected int64
-	}{
-		{"00110000", 48},
-		{"01100001", 97},
-		{"01000001", 65},
-		{"01111010", 122},
-		{"01011010", 90},
-	}
-
-	for _, c := range cases {
-		actual := n.binaryStringToInt(c.s)
-		if actual != c.expected {
-			t.Fatalf("for input %s, expected: %d, got: %d", c.s, c.expected, actual)
-		}
-	}
-}
