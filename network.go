@@ -31,8 +31,8 @@ type Network struct {
 	HiddenErrors  []float64
 }
 
-func NewNetwork(charWidth, charHeight int) *Network {
-	n := &Network{NumInputs: charWidth * charHeight, HiddenCount: 25, NumOutputs: 8}
+func NewNetwork(numInputs int) *Network {
+	n := &Network{NumInputs: numInputs, HiddenCount: 25, NumOutputs: 8}
 
 	n.InputValues = make([]int64, n.NumInputs)
 	n.OutputValues = make([]float64, n.NumOutputs)
@@ -234,25 +234,27 @@ func (n *Network) Train(img image.Image, r rune) {
 	n.adjustInputWeights()
 }
 
-func (n *Network) Save(filePath string) {
+func (n *Network) Save(filePath string) error {
 	buf := new(bytes.Buffer)
 	encoder := gob.NewEncoder(buf)
 
 	err := encoder.Encode(n)
 	if err != nil {
-		log.Fatalf("error encoding network: %s", err)
+		return fmt.Errorf("error encoding network: %s", err)
 	}
 
 	err = ioutil.WriteFile(filePath, buf.Bytes(), 0644)
 	if err != nil {
-		log.Fatalf("error writing network to file: %s", err)
+		return fmt.Errorf("error writing network to file: %s", err)
 	}
+
+	return nil
 }
 
-func RestoreNetwork(filePath string) *Network {
+func RestoreNetwork(filePath string) (*Network, error) {
 	b, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		log.Fatalf("error reading network file: %s", err)
+		return nil, fmt.Errorf("error reading network file: %s", err)
 	}
 
 	decoder := gob.NewDecoder(bytes.NewBuffer(b))
@@ -260,10 +262,10 @@ func RestoreNetwork(filePath string) *Network {
 	var result Network
 	err = decoder.Decode(&result)
 	if err != nil {
-		log.Fatalf("error decoding network: %s", err)
+		return nil, fmt.Errorf("error decoding network: %s", err)
 	}
 
-	return &result
+	return &result, nil
 }
 
 func (n *Network) intToBinaryString(i int64) string {

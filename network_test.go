@@ -7,7 +7,7 @@ import (
 )
 
 func TestNetwork(t *testing.T) {
-	n := NewNetwork(25, 25)
+	n := NewNetwork(25 * 25)
 	n.calculateHiddenOutputs()
 	n.calculateOutputErrors('A')
 	n.calculateFinalOutputs()
@@ -17,7 +17,7 @@ func TestNetwork(t *testing.T) {
 }
 
 func TestSaveRestore(t *testing.T) {
-	n := NewNetwork(25, 25)
+	n := NewNetwork(25 * 25)
 	n.assignRandomWeights()
 
 	f, err := ioutil.TempFile("", "network")
@@ -26,7 +26,10 @@ func TestSaveRestore(t *testing.T) {
 	}
 
 	n.Save(f.Name())
-	restored := RestoreNetwork(f.Name())
+	restored, err := RestoreNetwork(f.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	if !reflect.DeepEqual(n, restored) {
 		t.Errorf("expected: %+v, got %+v", n, restored)
@@ -46,7 +49,7 @@ func TestSigmoid(t *testing.T) {
 }
 
 func TestCharToBinaryString(t *testing.T) {
-	n := NewNetwork(25, 25)
+	n := NewNetwork(25 * 25)
 	n.NumOutputs = 8
 
 	cases := []struct {
@@ -69,7 +72,7 @@ func TestCharToBinaryString(t *testing.T) {
 }
 
 func TestBinaryStringToInt(t *testing.T) {
-	n := NewNetwork(25, 25)
+	n := NewNetwork(25 * 25)
 	cases := []struct {
 		s        string
 		expected int64
