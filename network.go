@@ -32,7 +32,17 @@ type Network struct {
 }
 
 func NewNetwork(charWidth, charHeight int) *Network {
-	return &Network{NumInputs: charWidth * charHeight, HiddenCount: 25, NumOutputs: 8}
+	n := &Network{NumInputs: charWidth * charHeight, HiddenCount: 25, NumOutputs: 8}
+
+	n.InputValues = make([]int64, n.NumInputs)
+	n.OutputValues = make([]float64, n.NumOutputs)
+	n.OutputErrors = make([]float64, n.NumOutputs)
+	n.HiddenOutputs = make([]float64, n.NumOutputs)
+	n.HiddenErrors = make([]float64, n.HiddenCount)
+
+	n.assignRandomWeights()
+
+	return n
 }
 
 // feed the image into the network
@@ -91,12 +101,6 @@ func (n *Network) assignRandomWeights() {
 
 		n.OutputWeights = append(n.OutputWeights, weights)
 	}
-
-	n.InputValues = make([]int64, n.NumInputs)
-	n.OutputValues = make([]float64, n.NumOutputs)
-	n.OutputErrors = make([]float64, n.NumOutputs)
-	n.HiddenOutputs = make([]float64, n.NumOutputs)
-	n.HiddenErrors = make([]float64, n.HiddenCount)
 }
 
 func (n *Network) calculateOutputErrors(r rune) {

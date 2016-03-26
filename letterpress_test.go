@@ -20,7 +20,7 @@ func TestCrop(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	tiles := Crop(lp)
+	tiles := CropGameboard(lp)
 
 	n := 0
 

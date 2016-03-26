@@ -2,8 +2,10 @@ package gocarina
 
 import (
 	"image"
+	_ "image/png" // register PNG format
 	"log"
 	"math"
+	"os"
 )
 
 const (
@@ -15,8 +17,75 @@ const (
 	LetterpressExpectedHeight = 1136
 )
 
+// populate map with reference images from letterpress game boards.
+
+func ProcessGameBoards() map[rune]image.Image {
+	result := make(map[rune]image.Image)
+
+	img := ReadImage("board-images/board1.png")
+	tiles := CropGameboard(img)
+	runes := []rune{
+		'P', 'R', 'B', 'R', 'Z',
+		'T', 'A', 'V', 'Z', 'R',
+		'B', 'D', 'A', 'K', 'Y',
+		'G', 'I', 'G', 'K', 'F',
+		'R', 'Y', 'S', 'J', 'V',
+	}
+
+	for i, r := range runes {
+		result[r] = tiles[i]
+	}
+
+	img = ReadImage("board-images/board2.png")
+	tiles = CropGameboard(img)
+	runes = []rune{
+		'Q', 'D', 'F', 'P', 'M',
+		'N', 'E', 'E', 'S', 'I',
+		'A', 'W', 'F', 'M', 'L',
+		'F', 'R', 'P', 'T', 'T',
+		'K', 'C', 'S', 'S', 'Y',
+	}
+
+	for i, r := range runes {
+		result[r] = tiles[i]
+	}
+
+	img = ReadImage("board-images/board3.png")
+	tiles = CropGameboard(img)
+	runes = []rune{
+		'L', 'H', 'F', 'L', 'M',
+		'R', 'V', 'P', 'U', 'K',
+		'V', 'O', 'E', 'E', 'X',
+		'I', 'N', 'R', 'I', 'T',
+		'V', 'N', 'S', 'I', 'Q',
+	}
+
+	for i, r := range runes {
+		result[r] = tiles[i]
+	}
+
+	return result
+}
+
+func ReadImage(file string) image.Image {
+	infile, err := os.Open(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer infile.Close()
+
+	img, _, err := image.Decode(infile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return img
+}
+
+// CropGameboard crops a letterpress screen grab into a slice of tile images, one per letter.
+//
 // TODO: no bounding_box
-func Crop(img image.Image) (result [][]image.Image) {
+func CropGameboard(img image.Image) (result []image.Image) {
 	if img.Bounds().Dx() != LetterPressExpectedWidth || img.Bounds().Dy() != LetterpressExpectedHeight {
 		log.Printf("Scaling...\n")
 		img = Scale(img, image.Rect(0, 0, LetterPressExpectedWidth, LetterpressExpectedHeight))
@@ -29,7 +98,6 @@ func Crop(img image.Image) (result [][]image.Image) {
 
 	for i := 0; i < LetterpressTilesDown; i++ {
 		xOffset := 0
-		var row []image.Image
 
 		for j := 0; j < LetterpressTilesAcross; j++ {
 			tileRect := image.Rect(xOffset+border, yOffset+border, xOffset+LetterpressTilePixels-border, yOffset+LetterpressTilePixels-border)
@@ -38,11 +106,10 @@ func Crop(img image.Image) (result [][]image.Image) {
 				SubImage(r image.Rectangle) image.Image
 			}).SubImage(tileRect)
 
-			row = append(row, tile)
+			result = append(result, tile)
 
 			xOffset += LetterpressTilePixels
 		}
-		result = append(result, row)
 
 		yOffset += LetterpressTilePixels
 	}

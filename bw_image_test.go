@@ -2,7 +2,6 @@ package gocarina
 
 import (
 	"image"
-	_ "image/png" // register PNG format
 	"os"
 	"testing"
 )
