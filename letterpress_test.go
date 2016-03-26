@@ -22,22 +22,17 @@ func TestCrop(t *testing.T) {
 
 	tiles := CropGameboard(lp)
 
-	n := 0
 
-	for _, row := range tiles {
-		for _, tile := range row {
-			n++
+	for i, tile := range tiles {
+		toFile, err := os.Create(fmt.Sprintf("tile%02d.png", i + 1))
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer toFile.Close()
 
-			toFile, err := os.Create(fmt.Sprintf("tile%02d.png", n))
-			if err != nil {
-				t.Fatal(err)
-			}
-			defer toFile.Close()
-
-			err = png.Encode(toFile, tile)
-			if err != nil {
-				t.Fatal(err)
-			}
+		err = png.Encode(toFile, tile)
+		if err != nil {
+			t.Fatal(err)
 		}
 	}
 
