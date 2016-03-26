@@ -25,7 +25,8 @@ func main() {
 	// do this first, so we have tile boundaries to create the network
 	m := gocarina.ProcessGameBoards()
 
-	tile := m['A']
+	targetRune := 'A'
+	tile := m[targetRune]
 	numInputs := tile.Bounds().Dx() * tile.Bounds().Dy()
 
 	var n *gocarina.Network
@@ -61,8 +62,7 @@ func main() {
 	}
 
 
-	r := n.Recognize(tile)
-	log.Printf("tile recognized as: %c", r)
-
-	log.Printf("success")
+	result := n.Recognize(tile)
+	success := result == targetRune
+	log.Printf("tile recognized as: %c, success: %t", result, success)
 }
