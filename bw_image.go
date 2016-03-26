@@ -27,9 +27,18 @@ func (c *Converted) Bounds() image.Rectangle {
 	return c.Img.Bounds()
 }
 
-// At forwards the call to the original image and then asks the color model to convert it.
+// At forwards the call to the original image, then quantizes to Black or White by
+// applying a threshold.
 func (c *Converted) At(x, y int) color.Color {
-	return c.Mod.Convert(c.Img.At(x, y))
+	r, g, b, _ := c.Img.At(x, y).RGBA()
+
+	combined := r + g + b
+
+	if combined < 50000 {
+		return color.Black
+	}
+
+	return color.White
 }
 
 func (c *Converted) SubImage(r image.Rectangle) image.Image {
