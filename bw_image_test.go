@@ -8,7 +8,7 @@ import (
 )
 
 func TestBlackWhiteImage(t *testing.T) {
-	infile, err := os.Open("ocarina.png")
+	infile, err := os.Open("board-images/board1.png")
 	if err != nil {
 		t.Fatal(err)
 	}
