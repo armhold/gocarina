@@ -150,21 +150,20 @@ func CropGameboard(img image.Image) (result []image.Image) {
 func Scale(srcImg image.Image, r image.Rectangle) image.Image {
 	dstImg := image.NewRGBA(r)
 
-	sw := srcImg.Bounds().Dx()
-	sh := srcImg.Bounds().Dy()
+	sb := srcImg.Bounds()
+	db := dstImg.Bounds()
 
-	dw := dstImg.Bounds().Dx()
-	dh := dstImg.Bounds().Dy()
+	for y := db.Min.Y; y < db.Max.Y; y++ {
+		percentDownDest := float64(y) / float64(db.Dy())
 
-	xAspect := float64(sw) / float64(dw)
-	yAspect := float64(sh) / float64(dh)
+		for x := db.Min.X; x < db.Max.X; x++ {
 
-	for y := 0; y < dh; y++ {
-		for x := 0; x < dw; x++ {
-			srcX := int(math.Floor(float64(x) * xAspect))
-			srcY := int(math.Floor(float64(y) * yAspect))
-			pix := srcImg.At(srcX, srcY)
-			log.Printf("x: %d, srcX: %d, y: %d, srcY: %d, color: %+v", x, srcX, y, srcY, pix)
+			percentAcrossDest := float64(x) / float64(db.Dx())
+
+			srcX := int(math.Floor(percentAcrossDest * float64(sb.Dx())))
+			srcY := int(math.Floor(percentDownDest * float64(sb.Dy())))
+
+			pix := srcImg.At(sb.Min.X + srcX, sb.Min.Y + srcY)
 			dstImg.Set(x, y, pix)
 		}
 	}
