@@ -52,7 +52,7 @@ func main() {
 
 	for i := 0; i < iter; i++ {
 		for r, tile := range m {
-			log.Printf("training: %c\n", r)
+			//log.Printf("training: %c\n", r)
 			n.Train(tile, r)
 		}
 	}
@@ -61,8 +61,20 @@ func main() {
 		n.Save(toFile)
 	}
 
+	count := 0
+	correct := 0
 
-	result := n.Recognize(tile)
-	success := result == targetRune
-	log.Printf("tile recognized as: %c, success: %t", result, success)
+	for r, tile := range m {
+		recognized := n.Recognize(tile)
+		count++
+
+		if recognized == r {
+			correct++
+		} else {
+			log.Printf("failure: tile recognized as: %c, should be: %c", recognized, r)
+		}
+	}
+
+	successPercent := float64(correct) / float64(count) * 100.0
+	log.Printf("successes: %d/%d => %%%.2f", correct, count, successPercent)
 }

@@ -236,16 +236,28 @@ func BoundingBox(src image.Image) image.Rectangle {
 }
 
 func DownsampleTiles(tiles []image.Image) (result []image.Image) {
-	rect := image.Rect(0, 0, TileTargetWidth, TileTargetHeight)
+	targetRect := image.Rect(0, 0, TileTargetWidth, TileTargetHeight)
 
 	for _, tile := range tiles {
+		src := tile
+
+		// find the bounding box for the character
 		boundedRect := BoundingBox(tile)
 
-		boundedImg := tile.(interface {
-			SubImage(r image.Rectangle) image.Image
-		}).SubImage(boundedRect)
+		// Only apply the bounding box if it's above 75% of the width/height.
+		// This is to avoid pathological cases for skinny letters like "I", which
+		// would otherwise result in completely black tiles when bounded.
 
-		downSampled := Scale(boundedImg, rect)
+		percent := 0.75
+		if boundedRect.Bounds().Dx() >= int(percent * float64(targetRect.Dx())) &&
+		   boundedRect.Bounds().Dy() >= int(percent * float64(targetRect.Dy())) {
+
+			src = src.(interface {
+				SubImage(r image.Rectangle) image.Image
+			}).SubImage(boundedRect)
+		}
+
+		downSampled := Scale(src, targetRect)
 		result = append(result, downSampled)
 	}
 

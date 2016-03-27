@@ -68,7 +68,7 @@ func (n *Network) Recognize(img image.Image) rune {
 		log.Fatalf("error in ParseInt for %s: ", err)
 	}
 
-	log.Printf("returning bitstring: %s", bitstring)
+	//log.Printf("returning bitstring: %s", bitstring)
 	return rune(asciiCode)
 }
 
@@ -144,10 +144,9 @@ func (n *Network) calculateOutputErrors(r rune) {
 
 	// NB: binaryString[i] will return bytes, not a rune. range does the right thing
 	for i, digit := range arrayOfInts {
-		log.Printf("digit: %d", digit)
+		//log.Printf("digit: %d", digit)
 
 		digitAsFloat := float64(digit)
-
 		n.OutputErrors[i] = (digitAsFloat - n.OutputValues[i]) * (1.0 - n.OutputValues[i]) * n.OutputValues[i]
 	}
 }
