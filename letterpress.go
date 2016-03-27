@@ -6,8 +6,11 @@ import (
 	"log"
 	"math"
 	"os"
+	"fmt"
+	"image/png"
 )
 
+// describes the geometry of the letterpress board source images
 const (
 	LetterpressTilesAcross    = 5
 	LetterpressTilesDown      = 5
@@ -17,6 +20,13 @@ const (
 	LetterpressExpectedHeight = 1136
 )
 
+
+// describes the *target* geometry of the tiles, after we have sampled them down
+const (
+	TileTargetWidth   = 16
+	TileTargetHeight  = 16
+)
+
 // populate map with reference images from letterpress game boards.
 
 func ProcessGameBoards() map[rune]image.Image {
@@ -24,6 +34,23 @@ func ProcessGameBoards() map[rune]image.Image {
 
 	img := ReadImage("board-images/board1.png")
 	tiles := CropGameboard(img)
+	tiles = DownsampleTiles(tiles)
+
+	// TODO: delete this. it's for debugging the downsampled tiles
+	for i, tile := range tiles {
+		toFile, err := os.Create(fmt.Sprintf("downsampled%02d.png", i + 1))
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer toFile.Close()
+
+		err = png.Encode(toFile, tile)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+
 	runes := []rune{
 		'P', 'R', 'B', 'R', 'Z',
 		'T', 'A', 'V', 'Z', 'R',
@@ -38,6 +65,7 @@ func ProcessGameBoards() map[rune]image.Image {
 
 	img = ReadImage("board-images/board2.png")
 	tiles = CropGameboard(img)
+	tiles = DownsampleTiles(tiles)
 	runes = []rune{
 		'Q', 'D', 'F', 'P', 'M',
 		'N', 'E', 'E', 'S', 'I',
@@ -52,6 +80,7 @@ func ProcessGameBoards() map[rune]image.Image {
 
 	img = ReadImage("board-images/board3.png")
 	tiles = CropGameboard(img)
+	tiles = DownsampleTiles(tiles)
 	runes = []rune{
 		'L', 'H', 'F', 'L', 'M',
 		'R', 'V', 'P', 'U', 'K',
@@ -135,9 +164,22 @@ func Scale(srcImg image.Image, r image.Rectangle) image.Image {
 			srcX := int(math.Floor(float64(x) * xAspect))
 			srcY := int(math.Floor(float64(y) * yAspect))
 			pix := srcImg.At(srcX, srcY)
+			log.Printf("x: %d, srcX: %d, y: %d, srcY: %d, color: %+v", x, srcX, y, srcY, pix)
 			dstImg.Set(x, y, pix)
 		}
 	}
 
 	return dstImg
+}
+
+
+func DownsampleTiles(tiles []image.Image) (result []image.Image) {
+	rect := image.Rect(0, 0, TileTargetWidth, TileTargetHeight)
+
+	for _, tile := range tiles {
+		downSampled := Scale(tile, rect)
+		result = append(result, downSampled)
+	}
+
+	return
 }
