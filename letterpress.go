@@ -113,7 +113,6 @@ func ReadImage(file string) image.Image {
 
 // CropGameboard crops a letterpress screen grab into a slice of tile images, one per letter.
 //
-// TODO: no bounding_box
 func CropGameboard(img image.Image) (result []image.Image) {
 	if img.Bounds().Dx() != LetterPressExpectedWidth || img.Bounds().Dy() != LetterpressExpectedHeight {
 		log.Printf("Scaling...\n")
@@ -147,11 +146,11 @@ func CropGameboard(img image.Image) (result []image.Image) {
 }
 
 // Scale scales the src image to the given rectangle using Nearest Neighbor
-func Scale(srcImg image.Image, r image.Rectangle) image.Image {
-	dstImg := image.NewRGBA(r)
+func Scale(src image.Image, r image.Rectangle) image.Image {
+	dst := image.NewRGBA(r)
 
-	sb := srcImg.Bounds()
-	db := dstImg.Bounds()
+	sb := src.Bounds()
+	db := dst.Bounds()
 
 	for y := db.Min.Y; y < db.Max.Y; y++ {
 		percentDownDest := float64(y) / float64(db.Dy())
@@ -163,12 +162,82 @@ func Scale(srcImg image.Image, r image.Rectangle) image.Image {
 			srcX := int(math.Floor(percentAcrossDest * float64(sb.Dx())))
 			srcY := int(math.Floor(percentDownDest * float64(sb.Dy())))
 
-			pix := srcImg.At(sb.Min.X + srcX, sb.Min.Y + srcY)
-			dstImg.Set(x, y, pix)
+			pix := src.At(sb.Min.X + srcX, sb.Min.Y + srcY)
+			dst.Set(x, y, pix)
 		}
 	}
 
-	return dstImg
+	return dst
+}
+
+
+// BoundingBox finds the minimum rectangle containing all non-white pixels in the source image,
+// and returns an image bound to that rectangle.
+func BoundingBox(src image.Image) image.Image {
+	min := src.Bounds().Min
+	max := src.Bounds().Max
+
+	leftX := func() int {
+		for x := min.X; x < max.X; x++ {
+			for y := min.Y; y < max.Y; y++ {
+				c := src.At(x, y)
+				if IsBlack(c) {
+					return x
+				}
+			}
+		}
+
+		// no non-white pixels found
+		return min.X
+	}
+
+	rightX := func() int {
+		for x := max.X - 1; x >= min.X; x-- {
+			for y := min.Y; y < max.Y; y++ {
+				c := src.At(x, y)
+				if IsBlack(c) {
+					return x
+				}
+			}
+		}
+
+		// no non-white pixels found
+		return max.X
+	}
+
+	topY := func() int {
+		for y := min.Y; y < max.Y; y++ {
+			for x := min.X; x < max.X; x++ {
+				c := src.At(x, y)
+				if IsBlack(c) {
+					return y
+				}
+			}
+		}
+
+		// no non-white pixels found
+		return max.Y
+	}
+
+	bottomY := func() int {
+		for y := max.Y - 1; y >= min.Y; y++ {
+			for x := min.X; x < max.X; x++ {
+				c := src.At(x, y)
+				if IsBlack(c) {
+					return y
+				}
+			}
+		}
+
+		// no non-white pixels found
+		return max.Y
+	}
+
+	rect := image.Rect(leftX(), topY(), rightX(), bottomY())
+
+	return src.(interface {
+		SubImage(r image.Rectangle) image.Image
+	}).SubImage(rect)
 }
 
 
@@ -176,7 +245,8 @@ func DownsampleTiles(tiles []image.Image) (result []image.Image) {
 	rect := image.Rect(0, 0, TileTargetWidth, TileTargetHeight)
 
 	for _, tile := range tiles {
-		downSampled := Scale(tile, rect)
+		bounded := BoundingBox(tile)
+		downSampled := Scale(bounded, rect)
 		result = append(result, downSampled)
 	}
 
