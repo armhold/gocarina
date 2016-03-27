@@ -59,7 +59,7 @@ func (n *Network) Recognize(img image.Image) rune {
 	// quantize output values
 	bitstring := ""
 	for _, v := range n.OutputValues {
-		log.Printf("v: %f", v)
+		//log.Printf("v: %f", v)
 		bitstring += strconv.Itoa(Round(v))
 	}
 
@@ -200,10 +200,10 @@ func (n *Network) calculateFinalOutputs() {
 		for j := 0; j < len(n.HiddenOutputs); j++ {
 			val := n.HiddenOutputs[j] * n.OutputWeights[j][i]
 			sum += val
-			log.Printf("val: %f", val)
+			//log.Printf("val: %f", val)
 		}
 
-		log.Printf("sum: %f", sum)
+		//log.Printf("sum: %f", sum)
 		n.OutputValues[i] = sigmoid(sum)
 	}
 }
@@ -212,17 +212,6 @@ func (n *Network) calculateFinalOutputs() {
 // mathematically it's supposed to be asymptotic, but large values of x may round up to 1
 func sigmoid(x float64) float64 {
 	return 1.0 / (1.0 + math.Exp(-x))
-}
-
-func (n *Network) printInputWeights() {
-	for _, weights := range n.InputWeights {
-
-		for _, w := range weights {
-			fmt.Printf("%f ", w)
-		}
-
-		fmt.Println()
-	}
 }
 
 func (n *Network) Train(img image.Image, r rune) {

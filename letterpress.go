@@ -171,9 +171,8 @@ func Scale(src image.Image, r image.Rectangle) image.Image {
 }
 
 
-// BoundingBox finds the minimum rectangle containing all non-white pixels in the source image,
-// and returns an image bound to that rectangle.
-func BoundingBox(src image.Image) image.Image {
+// BoundingBox returns the minimum rectangle containing all non-white pixels in the source image.
+func BoundingBox(src image.Image) image.Rectangle {
 	min := src.Bounds().Min
 	max := src.Bounds().Max
 
@@ -220,7 +219,7 @@ func BoundingBox(src image.Image) image.Image {
 	}
 
 	bottomY := func() int {
-		for y := max.Y - 1; y >= min.Y; y++ {
+		for y := max.Y - 1; y >= min.Y; y-- {
 			for x := min.X; x < max.X; x++ {
 				c := src.At(x, y)
 				if IsBlack(c) {
@@ -233,20 +232,20 @@ func BoundingBox(src image.Image) image.Image {
 		return max.Y
 	}
 
-	rect := image.Rect(leftX(), topY(), rightX(), bottomY())
-
-	return src.(interface {
-		SubImage(r image.Rectangle) image.Image
-	}).SubImage(rect)
+	return image.Rect(leftX(), topY(), rightX(), bottomY())
 }
-
 
 func DownsampleTiles(tiles []image.Image) (result []image.Image) {
 	rect := image.Rect(0, 0, TileTargetWidth, TileTargetHeight)
 
 	for _, tile := range tiles {
-		bounded := BoundingBox(tile)
-		downSampled := Scale(bounded, rect)
+		boundedRect := BoundingBox(tile)
+
+		boundedImg := tile.(interface {
+			SubImage(r image.Rectangle) image.Image
+		}).SubImage(boundedRect)
+
+		downSampled := Scale(boundedImg, rect)
 		result = append(result, downSampled)
 	}
 
