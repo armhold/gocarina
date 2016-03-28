@@ -34,29 +34,28 @@ func ProcessGameBoards() map[rune]image.Image {
 
 	img := ReadImage("board-images/board1.png")
 	tiles := CropGameboard(img)
-	tiles = DownsampleTiles(tiles)
-
-	// TODO: delete this. it's for debugging the downsampled tiles
-	for i, tile := range tiles {
-		toFile, err := os.Create(fmt.Sprintf("downsampled%02d.png", i + 1))
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer toFile.Close()
-
-		err = png.Encode(toFile, tile)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-
 	runes := []rune{
 		'P', 'R', 'B', 'R', 'Z',
 		'T', 'A', 'V', 'Z', 'R',
 		'B', 'D', 'A', 'K', 'Y',
 		'G', 'I', 'G', 'K', 'F',
 		'R', 'Y', 'S', 'J', 'V',
+	}
+	tiles = DownsampleTiles(tiles, runes)
+
+
+	// TODO: delete this. it's for debugging the downsampled tiles
+	for i, r := range runes {
+		toFile, err := os.Create(fmt.Sprintf("downsampled_%c.png", r))
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer toFile.Close()
+
+		err = png.Encode(toFile, tiles[i])
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	for i, r := range runes {
@@ -65,7 +64,6 @@ func ProcessGameBoards() map[rune]image.Image {
 
 	img = ReadImage("board-images/board2.png")
 	tiles = CropGameboard(img)
-	tiles = DownsampleTiles(tiles)
 	runes = []rune{
 		'Q', 'D', 'F', 'P', 'M',
 		'N', 'E', 'E', 'S', 'I',
@@ -73,6 +71,7 @@ func ProcessGameBoards() map[rune]image.Image {
 		'F', 'R', 'P', 'T', 'T',
 		'K', 'C', 'S', 'S', 'Y',
 	}
+	tiles = DownsampleTiles(tiles, runes)
 
 	for i, r := range runes {
 		result[r] = tiles[i]
@@ -80,7 +79,6 @@ func ProcessGameBoards() map[rune]image.Image {
 
 	img = ReadImage("board-images/board3.png")
 	tiles = CropGameboard(img)
-	tiles = DownsampleTiles(tiles)
 	runes = []rune{
 		'L', 'H', 'F', 'L', 'M',
 		'R', 'V', 'P', 'U', 'K',
@@ -88,6 +86,8 @@ func ProcessGameBoards() map[rune]image.Image {
 		'I', 'N', 'R', 'I', 'T',
 		'V', 'N', 'S', 'I', 'Q',
 	}
+	tiles = DownsampleTiles(tiles, runes)
+
 
 	for i, r := range runes {
 		result[r] = tiles[i]
@@ -235,27 +235,30 @@ func BoundingBox(src image.Image, border int) image.Rectangle {
 	return image.Rect(leftX(), topY(), rightX(), bottomY())
 }
 
-func DownsampleTiles(tiles []image.Image) (result []image.Image) {
+func DownsampleTiles(tiles []image.Image, runes []rune) (result []image.Image) {
 	targetRect := image.Rect(0, 0, TileTargetWidth, TileTargetHeight)
 
-	for _, tile := range tiles {
+	for i, tile := range tiles {
 		src := tile
 
 		// find the bounding box for the character
 		boundedRect := BoundingBox(tile, 2)
 
-		// Only apply the bounding box if it's above 75% of the width/height.
+		// Only apply the bounding box if it's above some % of the width/height of original tile.
 		// This is to avoid pathological cases for skinny letters like "I", which
 		// would otherwise result in completely black tiles when bounded.
 
-		percent := 0.75
-		if boundedRect.Bounds().Dx() >= int(percent * float64(targetRect.Dx())) &&
-		   boundedRect.Bounds().Dy() >= int(percent * float64(targetRect.Dy())) {
+		percent := 0.25
+		if boundedRect.Bounds().Dx() >= int(percent * float64(tile.Bounds().Dx())) &&
+		   boundedRect.Bounds().Dy() >= int(percent * float64(tile.Bounds().Dy())) {
 
 			src = src.(interface {
 				SubImage(r image.Rectangle) image.Image
 			}).SubImage(boundedRect)
+		} else {
+			log.Printf("rune: %c: skipping boundingbox: orig width: %d, boundbox width: %d", runes[i], tile.Bounds().Dx(),  boundedRect.Dx())
 		}
+
 
 		downSampled := Scale(src, targetRect)
 		result = append(result, downSampled)
