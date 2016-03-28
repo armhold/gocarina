@@ -172,7 +172,7 @@ func Scale(src image.Image, r image.Rectangle) image.Image {
 
 
 // BoundingBox returns the minimum rectangle containing all non-white pixels in the source image.
-func BoundingBox(src image.Image) image.Rectangle {
+func BoundingBox(src image.Image, border int) image.Rectangle {
 	min := src.Bounds().Min
 	max := src.Bounds().Max
 
@@ -181,7 +181,7 @@ func BoundingBox(src image.Image) image.Rectangle {
 			for y := min.Y; y < max.Y; y++ {
 				c := src.At(x, y)
 				if IsBlack(c) {
-					return x
+					return x - border
 				}
 			}
 		}
@@ -195,7 +195,7 @@ func BoundingBox(src image.Image) image.Rectangle {
 			for y := min.Y; y < max.Y; y++ {
 				c := src.At(x, y)
 				if IsBlack(c) {
-					return x
+					return x + border
 				}
 			}
 		}
@@ -209,7 +209,7 @@ func BoundingBox(src image.Image) image.Rectangle {
 			for x := min.X; x < max.X; x++ {
 				c := src.At(x, y)
 				if IsBlack(c) {
-					return y
+					return y - border
 				}
 			}
 		}
@@ -223,7 +223,7 @@ func BoundingBox(src image.Image) image.Rectangle {
 			for x := min.X; x < max.X; x++ {
 				c := src.At(x, y)
 				if IsBlack(c) {
-					return y
+					return y + border
 				}
 			}
 		}
@@ -242,7 +242,7 @@ func DownsampleTiles(tiles []image.Image) (result []image.Image) {
 		src := tile
 
 		// find the bounding box for the character
-		boundedRect := BoundingBox(tile)
+		boundedRect := BoundingBox(tile, 2)
 
 		// Only apply the bounding box if it's above 75% of the width/height.
 		// This is to avoid pathological cases for skinny letters like "I", which
