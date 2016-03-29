@@ -4,7 +4,7 @@ Golang version of OCARINA
 
 ![logo](https://github.com/armhold/gocarina/blob/master/gocarina-logo.png "gocarina Logo")
 
-This is a Go port of the [Ruby project](https://raw.github.com/armhold/ocarina/master/ocarina.png) I did a few years back.
+This is a Go port of the [Ruby project](https://github.com/armhold/ocarina) I did a few years back.
 
 Gocarina builds a feed-forward neural network to do simple Optical Character Recognition. It's trained on [Letterpress](http://www.atebits.com/letterpress) game boards, which makes it a handy way to automate a Letterpress cheat.
 
