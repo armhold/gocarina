@@ -33,7 +33,7 @@ type Network struct {
 
 func NewNetwork(numInputs int) *Network {
 	// NB: NumOutputs effectively constrains the range of chars that are recognizable
-	n := &Network{NumInputs: numInputs, HiddenCount: 25, NumOutputs: 8}
+	n := &Network{NumInputs: numInputs, HiddenCount: 250, NumOutputs: 8}
 
 	n.InputValues = make([]int64, n.NumInputs)
 	n.OutputValues = make([]float64, n.NumOutputs)
