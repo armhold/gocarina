@@ -22,6 +22,8 @@ func init() {
 }
 
 func main() {
+	log.SetFlags(0)
+
 	// do this first, so we have tile boundaries to create the network
 	m := gocarina.ReadKnownBoards()
 

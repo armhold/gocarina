@@ -67,7 +67,7 @@ func BoundingBox(src image.Image, border int) image.Rectangle {
 	}
 
 	// TODO: decide if +1 is correct or not
-	return image.Rect(leftX(), topY(), rightX() + 1, bottomY() + 1)
+	return image.Rect(leftX(), topY(), rightX()+1, bottomY()+1)
 }
 
 // Scale scales the src image to the given rectangle using Nearest Neighbor
@@ -93,7 +93,6 @@ func Scale(src image.Image, r image.Rectangle) image.Image {
 
 	return dst
 }
-
 
 // for debugging images
 func ImageToString(img image.Image) (result string) {

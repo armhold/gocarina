@@ -2,8 +2,8 @@ package gocarina
 
 import (
 	"image"
-	"testing"
 	"image/color"
+	"testing"
 )
 
 // just document behavior of image.Rectangle
@@ -56,7 +56,6 @@ func TestBoundingBox(t *testing.T) {
 	assertWidth(bbox, 12, t)
 	assertHeight(bbox, 12, t)
 }
-
 
 func assertWidth(rect image.Rectangle, w int, t *testing.T) {
 	if rect.Bounds().Dx() != w {

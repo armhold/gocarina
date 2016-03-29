@@ -21,6 +21,8 @@ func init() {
 }
 
 func main() {
+	log.SetFlags(0)
+
 	if networkFile == "" || boardFile == "" {
 		flag.Usage()
 		os.Exit(1)
