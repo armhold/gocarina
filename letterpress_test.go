@@ -11,7 +11,7 @@ func TestCrop(t *testing.T) {
 	m := ReadKnownBoards()
 
 	for letter, tile := range m {
-		toFile, err := os.Create(fmt.Sprintf("tile_%c.png", letter))
+		toFile, err := os.Create(fmt.Sprintf("debug_images/tile_%c.png", letter))
 		if err != nil {
 			t.Fatal(err)
 		}
