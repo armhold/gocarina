@@ -1,22 +1,21 @@
 package gocarina
 
 import (
-	"image"
-	"math"
-	"log"
-	"image/png"
 	"fmt"
+	"image"
+	"image/png"
+	"log"
+	"math"
 	"os"
 )
 
 const (
 	MinBoundingBoxPercent = 0.25
 
-        // describes the *target* geometry of the tiles, after we have sampled them down
-	TileTargetWidth   = 12
-	TileTargetHeight  = 12
+	// describes the *target* geometry of the tiles, after we have sampled them down
+	TileTargetWidth  = 12
+	TileTargetHeight = 12
 )
-
 
 // Tile represents a lettered square from a Letterpress gameboard.
 type Tile struct {
@@ -24,7 +23,6 @@ type Tile struct {
 	img     image.Image // the original tile image, prior to any scaling/downsampling
 	Reduced image.Image // the tile in black and white, bounding-boxed, and scaled down
 }
-
 
 func NewTile(letter rune, img image.Image) (result *Tile) {
 	result = &Tile{Letter: letter, img: img}
@@ -47,8 +45,8 @@ func (t *Tile) Reduce(border int) {
 	// This is to avoid pathological cases for skinny letters like "I", which
 	// would otherwise result in completely black tiles when bounded.
 
-	if bbox.Bounds().Dx() >= int(MinBoundingBoxPercent * float64(t.img.Bounds().Dx())) &&
-	   bbox.Bounds().Dy() >= int(MinBoundingBoxPercent * float64(t.img.Bounds().Dy())) {
+	if bbox.Bounds().Dx() >= int(MinBoundingBoxPercent*float64(t.img.Bounds().Dx())) &&
+		bbox.Bounds().Dy() >= int(MinBoundingBoxPercent*float64(t.img.Bounds().Dy())) {
 		src = src.(interface {
 			SubImage(r image.Rectangle) image.Image
 		}).SubImage(bbox)
@@ -58,7 +56,6 @@ func (t *Tile) Reduce(border int) {
 
 	t.Reduced = scale(src, targetRect)
 }
-
 
 // BoundingBox returns the minimum rectangle containing all non-white pixels in the source image.
 func boundingBox(src image.Image, border int) image.Rectangle {
@@ -124,7 +121,6 @@ func boundingBox(src image.Image, border int) image.Rectangle {
 	return image.Rect(leftX(), topY(), rightX(), bottomY())
 }
 
-
 // Scale scales the src image to the given rectangle using Nearest Neighbor
 func scale(src image.Image, r image.Rectangle) image.Image {
 	dst := image.NewRGBA(r)
@@ -141,7 +137,7 @@ func scale(src image.Image, r image.Rectangle) image.Image {
 			srcX := int(math.Floor(percentAcrossDest * float64(sb.Dx())))
 			srcY := int(math.Floor(percentDownDest * float64(sb.Dy())))
 
-			pix := src.At(sb.Min.X + srcX, sb.Min.Y + srcY)
+			pix := src.At(sb.Min.X+srcX, sb.Min.Y+srcY)
 			dst.Set(x, y, pix)
 		}
 	}

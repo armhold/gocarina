@@ -4,13 +4,13 @@ import (
 	"flag"
 	"log"
 
+	"fmt"
 	"github.com/armhold/gocarina"
 	"os"
-	"fmt"
 )
 
 var (
-	boardFile string
+	boardFile   string
 	networkFile string
 )
 
@@ -40,10 +40,9 @@ func main() {
 		line = line + fmt.Sprintf(" %c", c)
 
 		// print them out shaped like a 5x5 letterpress board
-		if (i + 1) % 5 == 0 {
+		if (i+1)%5 == 0 {
 			log.Printf(line)
 			line = ""
 		}
 	}
 }
-

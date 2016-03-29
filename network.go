@@ -54,7 +54,6 @@ func (n *Network) Recognize(img image.Image) rune {
 	n.calculateHiddenOutputs()
 	n.calculateFinalOutputs()
 
-
 	// quantize output values
 	bitstring := ""
 	for _, v := range n.OutputValues {
@@ -78,7 +77,6 @@ func Round(f float64) int {
 	}
 	return int(f + math.Copysign(0.5, f))
 }
-
 
 // feed the image into the network
 func (n *Network) assignInputs(img image.Image) {
@@ -271,11 +269,11 @@ func RestoreNetwork(filePath string) (*Network, error) {
 func (n *Network) runeToArrayOfInts(r rune) []int {
 	var result []int = make([]int, n.NumOutputs)
 
-	codePoint := int64(r)  // e.g. 65
+	codePoint := int64(r) // e.g. 65
 
 	// we want to pad with n.NumOutputs number of zeroes, so create a dynamic format for Sprintf
 	format := fmt.Sprintf("%%0%db", n.NumOutputs)
-	binaryString := fmt.Sprintf(format, codePoint)  // e.g. "01000001"
+	binaryString := fmt.Sprintf(format, codePoint) // e.g. "01000001"
 
 	// must use range: array indexing of strings returns bytes
 	for i, v := range binaryString {
@@ -287,4 +285,3 @@ func (n *Network) runeToArrayOfInts(r rune) []int {
 	}
 	return result
 }
-

@@ -9,8 +9,8 @@ import (
 
 var (
 	fromFile string
-	toFile string
-	iter int
+	toFile   string
+	iter     int
 )
 
 func init() {
@@ -43,12 +43,10 @@ func main() {
 			log.Fatalf("loaded network has %d inputs, tile has %d", n.NumInputs, numInputs)
 		}
 
-
 	} else {
 		log.Printf("creating new network...")
 		n = gocarina.NewNetwork(numInputs)
 	}
-
 
 	// save files for debugging
 	for r, tile := range m {

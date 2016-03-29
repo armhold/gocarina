@@ -75,7 +75,6 @@ func ReadKnownBoards() map[rune]*Tile {
 		result[tile.Letter] = tile
 	}
 
-
 	letters = []rune{
 		'L', 'H', 'F', 'L', 'M',
 		'R', 'V', 'P', 'U', 'K',
