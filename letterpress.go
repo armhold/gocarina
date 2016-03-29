@@ -110,7 +110,7 @@ func ReadImage(file string) image.Image {
 func (b *Board) crop() (result []image.Image) {
 	if b.img.Bounds().Dx() != LetterPressExpectedWidth || b.img.Bounds().Dy() != LetterpressExpectedHeight {
 		log.Printf("Scaling...\n")
-		b.img = scale(b.img, image.Rect(0, 0, LetterPressExpectedWidth, LetterpressExpectedHeight))
+		b.img = Scale(b.img, image.Rect(0, 0, LetterPressExpectedWidth, LetterpressExpectedHeight))
 	}
 
 	yOffset := LetterpressHeightOffset

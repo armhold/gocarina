@@ -81,21 +81,25 @@ func Round(f float64) int {
 // feed the image into the network
 func (n *Network) assignInputs(img image.Image) {
 	numPixels := img.Bounds().Dx() * img.Bounds().Dy()
-
-	for i := 0; i < numPixels; i++ {
-		col := pixelNumberToCol(i, img)
-		row := pixelNumberToRow(i, img)
-		pixel := pixelToBit(img.At(col, row))
-		n.InputValues[i] = pixel
+	if numPixels != n.NumInputs {
+		log.Fatal("expected %d inputs, got %d", n.NumInputs, numPixels)
 	}
-}
+	log.Printf("numPixels: %d", numPixels)
 
-func pixelNumberToCol(n int, img image.Image) int {
-	return n % img.Bounds().Dx()
-}
+	i := 0
+	for row := img.Bounds().Min.Y; row < img.Bounds().Max.Y; row++ {
+		for col := img.Bounds().Min.X; col < img.Bounds().Max.X; col++ {
+			pixel := pixelToBit(img.At(col, row))
+			n.InputValues[i] = pixel
+			i++
+		}
+	}
 
-func pixelNumberToRow(n int, img image.Image) int {
-	return n / img.Bounds().Dx()
+	if i != n.NumInputs {
+		log.Fatal("expected i to be: %d, was: %d", n.NumInputs, i)
+	}
+
+	log.Printf(ImageToString(img))
 }
 
 func pixelToBit(c color.Color) int64 {
@@ -137,6 +141,7 @@ func (n *Network) assignRandomWeights() {
 }
 
 func (n *Network) calculateOutputErrors(r rune) {
+	accumError := 0.0
 	arrayOfInts := n.runeToArrayOfInts(r)
 
 	// NB: binaryString[i] will return bytes, not a rune. range does the right thing
@@ -144,7 +149,10 @@ func (n *Network) calculateOutputErrors(r rune) {
 		//log.Printf("digit: %d", digit)
 
 		digitAsFloat := float64(digit)
-		n.OutputErrors[i] = (digitAsFloat - n.OutputValues[i]) * (1.0 - n.OutputValues[i]) * n.OutputValues[i]
+		err := (digitAsFloat - n.OutputValues[i]) * (1.0 - n.OutputValues[i]) * n.OutputValues[i]
+		n.OutputErrors[i] = err
+		accumError += err * err
+		log.Printf("accumError: %.10f", accumError)
 	}
 }
 
@@ -211,12 +219,9 @@ func sigmoid(x float64) float64 {
 }
 
 func (n *Network) Train(img image.Image, r rune) {
-	// quantize to two-color
-	bwImg := BlackWhiteImage(img)
-
 	// feed the image data forward through the network to obtain a result
 	//
-	n.assignInputs(bwImg)
+	n.assignInputs(img)
 	n.calculateHiddenOutputs()
 	n.calculateFinalOutputs()
 

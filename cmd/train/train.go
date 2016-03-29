@@ -49,9 +49,8 @@ func main() {
 	}
 
 	// save files for debugging
-	for r, tile := range m {
+	for _, tile := range m {
 		tile.SaveReducedTile()
-		n.Train(tile.Reduced, r)
 	}
 
 	for i := 0; i < iter; i++ {

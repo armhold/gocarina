@@ -5,7 +5,6 @@ import (
 	"image"
 	"image/png"
 	"log"
-	"math"
 	"os"
 )
 
@@ -13,8 +12,8 @@ const (
 	MinBoundingBoxPercent = 0.25
 
 	// describes the *target* geometry of the tiles, after we have sampled them down
-	TileTargetWidth  = 12
-	TileTargetHeight = 12
+	TileTargetWidth  = 16
+	TileTargetHeight = 16
 )
 
 // Tile represents a lettered square from a Letterpress gameboard.
@@ -22,6 +21,7 @@ type Tile struct {
 	Letter  rune        // the letter this tile represents, if known
 	img     image.Image // the original tile image, prior to any scaling/downsampling
 	Reduced image.Image // the tile in black and white, bounding-boxed, and scaled down
+	Bounded image.Image
 }
 
 func NewTile(letter rune, img image.Image) (result *Tile) {
@@ -35,11 +35,18 @@ func NewTile(letter rune, img image.Image) (result *Tile) {
 // The resulting image will be stored in t.reducedImage
 func (t *Tile) Reduce(border int) {
 	targetRect := image.Rect(0, 0, TileTargetWidth, TileTargetHeight)
+	if targetRect.Dx() != TileTargetWidth {
+		log.Fatalf("expected targetRect.Dx() to be %d, got: %d", TileTargetWidth, targetRect.Dx())
+	}
+
+	if targetRect.Dy() != TileTargetHeight {
+		log.Fatal("expected targetRect.Dy() to be %d, got: %d", TileTargetHeight, targetRect.Dy())
+	}
 
 	src := BlackWhiteImage(t.img)
 
 	// find the bounding box for the character
-	bbox := boundingBox(src, 2)
+	bbox := BoundingBox(src, 2)
 
 	// Only apply the bounding box if it's above some % of the width/height of original tile.
 	// This is to avoid pathological cases for skinny letters like "I", which
@@ -54,105 +61,27 @@ func (t *Tile) Reduce(border int) {
 		log.Printf("rune: %c: skipping boundingbox: orig width: %d, boundbox width: %d", t.Letter, t.img.Bounds().Dx(), bbox.Dx())
 	}
 
-	t.Reduced = scale(src, targetRect)
-}
+	t.Bounded = src
+	t.Reduced = Scale(src, targetRect)
 
-// BoundingBox returns the minimum rectangle containing all non-white pixels in the source image.
-func boundingBox(src image.Image, border int) image.Rectangle {
-	min := src.Bounds().Min
-	max := src.Bounds().Max
-
-	leftX := func() int {
-		for x := min.X; x < max.X; x++ {
-			for y := min.Y; y < max.Y; y++ {
-				c := src.At(x, y)
-				if IsBlack(c) {
-					return x - border
-				}
-			}
-		}
-
-		// no non-white pixels found
-		return min.X
+	if t.Reduced.Bounds().Dx() != TileTargetWidth {
+		log.Fatalf("expected t.Reduced.Bounds().Dx() to be %d, got: %d", TileTargetWidth, t.Reduced.Bounds().Dx())
 	}
 
-	rightX := func() int {
-		for x := max.X - 1; x >= min.X; x-- {
-			for y := min.Y; y < max.Y; y++ {
-				c := src.At(x, y)
-				if IsBlack(c) {
-					return x + border
-				}
-			}
-		}
-
-		// no non-white pixels found
-		return max.X
+	if t.Reduced.Bounds().Dy() != TileTargetHeight {
+		log.Fatal("expected t.Reduced.Bounds().Dy() to be %d, got: %d", TileTargetHeight, t.Reduced.Bounds().Dy())
 	}
 
-	topY := func() int {
-		for y := min.Y; y < max.Y; y++ {
-			for x := min.X; x < max.X; x++ {
-				c := src.At(x, y)
-				if IsBlack(c) {
-					return y - border
-				}
-			}
-		}
-
-		// no non-white pixels found
-		return max.Y
-	}
-
-	bottomY := func() int {
-		for y := max.Y - 1; y >= min.Y; y-- {
-			for x := min.X; x < max.X; x++ {
-				c := src.At(x, y)
-				if IsBlack(c) {
-					return y + border
-				}
-			}
-		}
-
-		// no non-white pixels found
-		return max.Y
-	}
-
-	return image.Rect(leftX(), topY(), rightX(), bottomY())
-}
-
-// Scale scales the src image to the given rectangle using Nearest Neighbor
-func scale(src image.Image, r image.Rectangle) image.Image {
-	dst := image.NewRGBA(r)
-
-	sb := src.Bounds()
-	db := dst.Bounds()
-
-	for y := db.Min.Y; y < db.Max.Y; y++ {
-		percentDownDest := float64(y) / float64(db.Dy())
-
-		for x := db.Min.X; x < db.Max.X; x++ {
-			percentAcrossDest := float64(x) / float64(db.Dx())
-
-			srcX := int(math.Floor(percentAcrossDest * float64(sb.Dx())))
-			srcY := int(math.Floor(percentDownDest * float64(sb.Dy())))
-
-			pix := src.At(sb.Min.X+srcX, sb.Min.Y+srcY)
-			dst.Set(x, y, pix)
-		}
-	}
-
-	return dst
 }
 
 func (t *Tile) SaveReducedTile() {
-	toFile, err := os.Create(fmt.Sprintf("reduced_%c.png", t.Letter))
+	toFile, err := os.Create(fmt.Sprintf("bounded_%c.png", t.Letter))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer toFile.Close()
 
-	err = png.Encode(toFile, t.Reduced)
+	err = png.Encode(toFile, t.Bounded)
 	if err != nil {
 		log.Fatal(err)
 	}
