@@ -46,7 +46,7 @@ func (t *Tile) Reduce(border int) {
 	src := BlackWhiteImage(t.img)
 
 	// find the bounding box for the character
-	bbox := BoundingBox(src, 2)
+	bbox := BoundingBox(src, 0)
 
 	// Only apply the bounding box if it's above some % of the width/height of original tile.
 	// This is to avoid pathological cases for skinny letters like "I", which
@@ -63,6 +63,10 @@ func (t *Tile) Reduce(border int) {
 
 	t.Bounded = src
 	t.Reduced = Scale(src, targetRect)
+
+	//log.Printf("XXXXXXXXX\n")
+	//log.Printf(ImageToString(t.Reduced))
+	//log.Printf("XXXXXXXXX\n")
 
 	if t.Reduced.Bounds().Dx() != TileTargetWidth {
 		log.Fatalf("expected t.Reduced.Bounds().Dx() to be %d, got: %d", TileTargetWidth, t.Reduced.Bounds().Dx())

@@ -84,7 +84,7 @@ func (n *Network) assignInputs(img image.Image) {
 	if numPixels != n.NumInputs {
 		log.Fatal("expected %d inputs, got %d", n.NumInputs, numPixels)
 	}
-	log.Printf("numPixels: %d", numPixels)
+	//log.Printf("numPixels: %d", numPixels)
 
 	i := 0
 	for row := img.Bounds().Min.Y; row < img.Bounds().Max.Y; row++ {
@@ -98,8 +98,6 @@ func (n *Network) assignInputs(img image.Image) {
 	if i != n.NumInputs {
 		log.Fatal("expected i to be: %d, was: %d", n.NumInputs, i)
 	}
-
-	log.Printf(ImageToString(img))
 }
 
 func pixelToBit(c color.Color) int64 {
@@ -152,7 +150,7 @@ func (n *Network) calculateOutputErrors(r rune) {
 		err := (digitAsFloat - n.OutputValues[i]) * (1.0 - n.OutputValues[i]) * n.OutputValues[i]
 		n.OutputErrors[i] = err
 		accumError += err * err
-		log.Printf("accumError: %.10f", accumError)
+		//log.Printf("accumError: %.10f", accumError)
 	}
 }
 
