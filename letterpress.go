@@ -19,8 +19,8 @@ const (
 
 // Board represents a Letterpress gameboard image
 type Board struct {
-	img image.Image
-	tiles []*Tile
+	img   image.Image
+	Tiles []*Tile
 }
 
 func ReadKnownBoard(file string, letters []rune) *Board {
@@ -29,7 +29,7 @@ func ReadKnownBoard(file string, letters []rune) *Board {
 	images := b.crop()
 	for i, img := range images {
 		tile := NewTile(letters[i], img)
-		b.tiles = append(b.tiles, tile)
+		b.Tiles = append(b.Tiles, tile)
 	}
 
 	return b
@@ -41,7 +41,7 @@ func ReadUnknownBoard(file string) *Board {
 	images := b.crop()
 	for _, img := range images {
 		tile := NewTile('?', img)
-		b.tiles = append(b.tiles, tile)
+		b.Tiles = append(b.Tiles, tile)
 	}
 
 	return b
@@ -59,7 +59,7 @@ func ReadKnownBoards() map[rune]*Tile {
 	}
 
 	b := ReadKnownBoard("board-images/board1.png", letters)
-	for _, tile := range b.tiles {
+	for _, tile := range b.Tiles {
 		result[tile.Letter] = tile
 	}
 
@@ -71,7 +71,7 @@ func ReadKnownBoards() map[rune]*Tile {
 		'K', 'C', 'S', 'S', 'Y',
 	}
 	b = ReadKnownBoard("board-images/board2.png", letters)
-	for _, tile := range b.tiles {
+	for _, tile := range b.Tiles {
 		result[tile.Letter] = tile
 	}
 
@@ -84,7 +84,7 @@ func ReadKnownBoards() map[rune]*Tile {
 		'V', 'N', 'S', 'I', 'Q',
 	}
 	b = ReadKnownBoard("board-images/board3.png", letters)
-	for _, tile := range b.tiles {
+	for _, tile := range b.Tiles {
 		result[tile.Letter] = tile
 	}
 
