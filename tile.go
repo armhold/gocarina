@@ -12,8 +12,8 @@ const (
 	MinBoundingBoxPercent = 0.25
 
 	// describes the *target* geometry of the tiles, after we have sampled them down
-	TileTargetWidth  = 16
-	TileTargetHeight = 16
+	TileTargetWidth  = 12
+	TileTargetHeight = 12
 )
 
 // Tile represents a lettered square from a Letterpress gameboard.

@@ -10,13 +10,13 @@ import (
 var (
 	fromFile string
 	toFile   string
-	iter     int
+	maxIter int
 )
 
 func init() {
 	flag.StringVar(&fromFile, "load", "", "to load network from a saved file")
 	flag.StringVar(&toFile, "save", "", "to save network to a file")
-	flag.IntVar(&iter, "iter", 100, "number of training iterations")
+	flag.IntVar(&maxIter, "max", 500, "max number of training iterations")
 
 	flag.Parse()
 }
@@ -55,10 +55,15 @@ func main() {
 		tile.SaveReducedTile()
 	}
 
-	for i := 0; i < iter; i++ {
+	for i := 0; i < maxIter; i++ {
 		for r, tile := range m {
 			//log.Printf("training: %c\n", r)
 			n.Train(tile.Reduced, r)
+		}
+
+		if allCorrect(m, n) {
+			log.Printf("success took %d iterations", i + 1)
+			break
 		}
 	}
 
@@ -66,9 +71,9 @@ func main() {
 		n.Save(toFile)
 	}
 
+	// show details on success/failure
 	count := 0
 	correct := 0
-
 	for r, tile := range m {
 		recognized := n.Recognize(tile.Reduced)
 		count++
@@ -82,4 +87,17 @@ func main() {
 
 	successPercent := float64(correct) / float64(count) * 100.0
 	log.Printf("success rate: %d/%d => %%%.2f", correct, count, successPercent)
+}
+
+
+// fail-fast way to detect if network has 100% success rate yet
+func allCorrect(m map[rune]*gocarina.Tile, n *gocarina.Network) bool {
+	for r, tile := range m {
+		recognized := n.Recognize(tile.Reduced)
+		if recognized != r {
+			return false
+		}
+	}
+
+	return true
 }
