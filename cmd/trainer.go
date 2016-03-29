@@ -23,11 +23,11 @@ func init() {
 
 func main() {
 	// do this first, so we have tile boundaries to create the network
-	m := gocarina.ProcessGameBoards()
+	m := gocarina.ReadKnownBoards()
 
-	targetRune := 'A'
-	tile := m[targetRune]
-	numInputs := tile.Bounds().Dx() * tile.Bounds().Dy()
+	exampleTile := m['A'].Reduced
+	pixelCount := exampleTile.Bounds().Dx() * exampleTile.Bounds().Dy()
+	numInputs := pixelCount
 
 	var n *gocarina.Network
 	var err error
@@ -50,10 +50,16 @@ func main() {
 	}
 
 
+	// save files for debugging
+	for r, tile := range m {
+		tile.SaveReducedTile()
+		n.Train(tile.Reduced, r)
+	}
+
 	for i := 0; i < iter; i++ {
 		for r, tile := range m {
 			//log.Printf("training: %c\n", r)
-			n.Train(tile, r)
+			n.Train(tile.Reduced, r)
 		}
 	}
 
@@ -65,7 +71,7 @@ func main() {
 	correct := 0
 
 	for r, tile := range m {
-		recognized := n.Recognize(tile)
+		recognized := n.Recognize(tile.Reduced)
 		count++
 
 		if recognized == r {
@@ -76,5 +82,5 @@ func main() {
 	}
 
 	successPercent := float64(correct) / float64(count) * 100.0
-	log.Printf("successes: %d/%d => %%%.2f", correct, count, successPercent)
+	log.Printf("success rate: %d/%d => %%%.2f", correct, count, successPercent)
 }
