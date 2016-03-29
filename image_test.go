@@ -48,11 +48,24 @@ func TestBoundingBox(t *testing.T) {
 	img.Set(12, 12, color.Black)
 
 	bbox := BoundingBox(img, 0)
-	if bbox.Bounds().Dx() != 10 {
-		t.Fatalf("expected bbox.Bounds().Dx() to be 10, was: %d", bbox.Bounds().Dx())
-	}
+	assertWidth(bbox, 10, t)
+	assertHeight(bbox, 10, t)
 
-	if bbox.Bounds().Dy() != 10 {
-		t.Fatalf("expected bbox.Bounds().Dy() to be 10, was: %d", bbox.Bounds().Dy())
+	// now test with border
+	bbox = BoundingBox(img, 1)
+	assertWidth(bbox, 12, t)
+	assertHeight(bbox, 12, t)
+}
+
+
+func assertWidth(rect image.Rectangle, w int, t *testing.T) {
+	if rect.Bounds().Dx() != w {
+		t.Fatalf("expected rect.Bounds().Dx() to be %d, was: %d", w, rect.Bounds().Dx())
+	}
+}
+
+func assertHeight(rect image.Rectangle, h int, t *testing.T) {
+	if rect.Bounds().Dy() != h {
+		t.Fatalf("expected rect.Bounds().Dy() to be %d, was: %d", h, rect.Bounds().Dy())
 	}
 }
