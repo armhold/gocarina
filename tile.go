@@ -75,7 +75,7 @@ func (t *Tile) Reduce(border int) {
 }
 
 func (t *Tile) SaveReducedTile() {
-	toFile, err := os.Create(fmt.Sprintf("debug_images/bounded_%c.png", t.Letter))
+	toFile, err := os.Create(fmt.Sprintf("debug_output/bounded_%c.png", t.Letter))
 	if err != nil {
 		log.Fatal(err)
 	}
