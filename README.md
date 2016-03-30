@@ -17,7 +17,7 @@ You now have a trained neural network in `ocr.save`.
 
 Now you can ask it decipher game boards like this:
 
-`$ go run cmd/recognize/recognize.go  -network ocr.save  -board board-images/board5.png`
+`$ go run cmd/recognize/recognize.go  -network ocr.save  -board board-images/board3.png`
 ```
  L H F L M
  R V P U K
