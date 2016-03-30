@@ -19,11 +19,11 @@ Now you can ask it decipher game boards like this:
 
 `$ go run cmd/recognize/recognize.go  -network ocr.save  -board board-images/board5.png`
 ```
-  C Y M T I
-  P Z Y L Y
-  D W O H S
-  D W H A S
-  O Z X G K
+ L H F L M
+ R V P U K
+ V O E E X
+ I N R I T
+ V N S I Q
 ```
 
 
