@@ -5,7 +5,7 @@
 This is a Go port of the [Ruby project](https://github.com/armhold/ocarina) I did a few years back.
 
 Gocarina uses a neural network to do simple Optical Character Recognition (OCR).
-It's trained on [Letterpress](http://www.atebits.com/letterpress) game boards.
+It's trained on [Letterpress(™)](http://www.atebits.com/letterpress) game boards.
 
 ## Usage
 
@@ -15,7 +15,7 @@ First, we need to train the network:
 
 You now have a trained neural network in `ocr.save`.
 
-Now you can ask it decipher Letterpress boards like this:
+Now you can ask it decipher game boards like this:
 
 `$ go run cmd/recognize/recognize.go  -network ocr.save  -board board-images/board5.png`
 ```
@@ -29,7 +29,7 @@ Now you can ask it decipher Letterpress boards like this:
 
 ## How it works
 
-We start with three "known" Letterpress boards. We split them up into individual tiles, one per letter.
+We start with three "known" game boards. We split them up into individual tiles, one per letter.
 This covers the entire alphabet, and gives us our training set. We feed the tiles into the network one at a time.
 
 
