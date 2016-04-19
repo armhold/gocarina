@@ -1,4 +1,4 @@
-# gocarina - Golang version of OCARINA
+# GOCARINA - simple Optical Character Recognition in Go
 
 ![logo](https://github.com/armhold/gocarina/blob/master/gocarina-logo.png "gocarina Logo")
 
@@ -31,15 +31,16 @@ Now you can ask it decipher game boards like this:
 ## How it works
 
 We start with three "known" game boards. We split them up into individual tiles, one per letter.
-This covers the entire alphabet, and gives us our training set. We feed the tiles into the network one at a time.
+This covers the entire alphabet, and gives us our training set. We feed the tiles into the network one at a time,
+repeatedly, until the network is trained.
 
 
 ## Representation & Encoding
 
 ### Input
 
-Tiles are fed into the network as a series of bits. Tiles are quantized to black & white, bounding boxed, and finally
-scaled down to a small rectangular bitmap. These bits are then fed directly into the inputs of the network.
+The tiles are quantized to black & white, bounding boxed, and finally scaled down to a small rectangular bitmap.
+These bits are then fed directly into the inputs of the network.
 
 
 ### Output
