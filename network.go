@@ -82,7 +82,7 @@ func Round(f float64) int {
 func (n *Network) assignInputs(img image.Image) {
 	numPixels := img.Bounds().Dx() * img.Bounds().Dy()
 	if numPixels != n.NumInputs {
-		log.Fatal("expected %d inputs, got %d", n.NumInputs, numPixels)
+		log.Fatalf("expected %d inputs, got %d", n.NumInputs, numPixels)
 	}
 	//log.Printf("numPixels: %d", numPixels)
 
@@ -96,7 +96,7 @@ func (n *Network) assignInputs(img image.Image) {
 	}
 
 	if i != n.NumInputs {
-		log.Fatal("expected i to be: %d, was: %d", n.NumInputs, i)
+		log.Fatalf("expected i to be: %d, was: %d", n.NumInputs, i)
 	}
 }
 

@@ -40,7 +40,7 @@ func (t *Tile) Reduce(border int) {
 	}
 
 	if targetRect.Dy() != TileTargetHeight {
-		log.Fatal("expected targetRect.Dy() to be %d, got: %d", TileTargetHeight, targetRect.Dy())
+		log.Fatalf("expected targetRect.Dy() to be %d, got: %d", TileTargetHeight, targetRect.Dy())
 	}
 
 	src := BlackWhiteImage(t.img)
@@ -73,7 +73,7 @@ func (t *Tile) Reduce(border int) {
 	}
 
 	if t.Reduced.Bounds().Dy() != TileTargetHeight {
-		log.Fatal("expected t.Reduced.Bounds().Dy() to be %d, got: %d", TileTargetHeight, t.Reduced.Bounds().Dy())
+		log.Fatalf("expected t.Reduced.Bounds().Dy() to be %d, got: %d", TileTargetHeight, t.Reduced.Bounds().Dy())
 	}
 
 }

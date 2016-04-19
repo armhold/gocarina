@@ -24,7 +24,7 @@ func TestBlackWhiteImage(t *testing.T) {
 		for y := 0; y < bwImg.Bounds().Dy(); y++ {
 			c := bwImg.At(x, y)
 			if !(IsBlack(c) || IsWhite(c)) {
-				t.Fatal("not black or white: %+v", c)
+				t.Fatalf("not black or white: %+v", c)
 			}
 		}
 	}

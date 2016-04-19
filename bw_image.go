@@ -58,8 +58,6 @@ func IsBlack(c color.Color) bool {
 	r, g, b, a := c.RGBA()
 
 	return r == br && g == bg && b == bb && a == ba
-
-	return r == wr && g == wg && b == wb && a == wa
 }
 
 func IsWhite(c color.Color) bool {

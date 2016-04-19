@@ -10,7 +10,7 @@ import (
 var (
 	fromFile string
 	toFile   string
-	maxIter int
+	maxIter  int
 )
 
 func init() {
@@ -62,7 +62,7 @@ func main() {
 		}
 
 		if allCorrect(m, n) {
-			log.Printf("success took %d iterations", i + 1)
+			log.Printf("success took %d iterations", i+1)
 			break
 		}
 	}
@@ -88,7 +88,6 @@ func main() {
 	successPercent := float64(correct) / float64(count) * 100.0
 	log.Printf("success rate: %d/%d => %%%.2f", correct, count, successPercent)
 }
-
 
 // fail-fast way to detect if network has 100% success rate yet
 func allCorrect(m map[rune]*gocarina.Tile, n *gocarina.Network) bool {
