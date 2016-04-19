@@ -11,13 +11,14 @@ It's trained on [Letterpress(™)](http://www.atebits.com/letterpress) game boar
 
 First, we need to train the network:
 
-`$ go run cmd/train/train.go -max 1000 -save ocr.save`
+`$ go install github.com/armhold/gocarina/...`
+`$ train -max 1000 -save ocr.save`
 
 You now have a trained neural network in `ocr.save`.
 
 Now you can ask it decipher game boards like this:
 
-`$ go run cmd/recognize/recognize.go  -network ocr.save  -board board-images/board3.png`
+`$ recognize -network ocr.save  -board board-images/board3.png`
 ```
  L H F L M
  R V P U K

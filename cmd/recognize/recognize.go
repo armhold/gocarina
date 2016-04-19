@@ -16,7 +16,7 @@ var (
 
 func init() {
 	flag.StringVar(&boardFile, "board", "", "the letterpress board to read")
-	flag.StringVar(&networkFile, "network", "", "the trained network file to use")
+	flag.StringVar(&networkFile, "network", "ocr.save", "the trained network file to use")
 	flag.Parse()
 }
 

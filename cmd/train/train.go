@@ -15,7 +15,7 @@ var (
 
 func init() {
 	flag.StringVar(&fromFile, "load", "", "to load network from a saved file")
-	flag.StringVar(&toFile, "save", "", "to save network to a file")
+	flag.StringVar(&toFile, "save", "ocr.save", "to save network to a file")
 	flag.IntVar(&maxIter, "max", 500, "max number of training iterations")
 
 	flag.Parse()
