@@ -77,12 +77,11 @@ For convenience, we use the natural ASCII/Unicode mapping where 'A' = 65, aka 01
 outputs, corresponding to the 8 bits of our letters.
 
 
-### What's with the name?
+## What's with the name?
 
 Original project: "Ocarina", **OC**a**R**ina, i.e. OCR. Go + Ocarina => Gocarina.
 
 
-###  Credits
+## Credits
 
 The file `words-en.txt` is in the Public Domain, licensed under CC0 thanks to https://github.com/atebits/Words.
-
