@@ -17,8 +17,10 @@ First, install the software:
 Next, we need to create and train a network. Be sure to first connect to the source directory
 (`train` expects the game boards to appear in `board-images/`):
 
-`$ cd $GOPATH/github.com/armhold/gocarina`
-`$ train`
+```
+$ cd $GOPATH/github.com/armhold/gocarina
+$ train
+```
 
 You now have a trained neural network in `ocr.save`.
 
