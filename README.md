@@ -24,7 +24,7 @@ $ train
 
 You now have a trained neural network in `ocr.save`. You can ask it decipher game boards like this:
 
-`$ recognize -board board-images/board3.png`
+`$ recognize board-images/board3.png`
 ```
  L H F L M
  R V P U K
@@ -35,7 +35,7 @@ You now have a trained neural network in `ocr.save`. You can ask it decipher gam
 
 You can also ask it to give you a list of words that can be formed with the board:
 
-`$ recognize -board board-images/board3.png -words`
+`$ recognize -w board-images/board3.png`
 ```
  L H F L M
  R V P U K
