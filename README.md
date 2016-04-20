@@ -1,11 +1,11 @@
 # GOCARINA - simple Optical Character Recognition in Go
 
-![logo](https://github.com/armhold/gocarina/blob/master/gocarina-logo.png "gocarina Logo")
-
 Gocarina uses a neural network to do simple Optical Character Recognition (OCR).
 It's trained on [Letterpress(™)](http://www.atebits.com/letterpress) game boards.
 
 This is a Go port of the [Ruby project](https://github.com/armhold/ocarina) I did a few years back.
+
+![logo](https://github.com/armhold/gocarina/blob/master/gocarina-logo.png "gocarina Logo")
 
 
 ## Usage
@@ -22,9 +22,7 @@ $ cd $GOPATH/src/github.com/armhold/gocarina
 $ train
 ```
 
-You now have a trained neural network in `ocr.save`.
-
-Now you can ask it decipher game boards like this:
+You now have a trained neural network in `ocr.save`. You can ask it decipher game boards like this:
 
 `$ recognize -board board-images/board3.png`
 ```
