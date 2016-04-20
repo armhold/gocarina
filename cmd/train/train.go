@@ -56,8 +56,9 @@ func main() {
 	}
 
 	for i := 0; i < maxIter; i++ {
+		//log.Printf("training iteration: %d\n", i)
+
 		for r, tile := range m {
-			//log.Printf("training: %c\n", r)
 			n.Train(tile.Reduced, r)
 		}
 

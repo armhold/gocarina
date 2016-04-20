@@ -1,7 +1,7 @@
 # GOCARINA - simple Optical Character Recognition in Go
 
 Gocarina uses a neural network to do simple Optical Character Recognition (OCR).
-It's trained on [Letterpress(™)](http://www.atebits.com/letterpress) game boards.
+It's trained on [Letterpress®](http://www.atebits.com/letterpress) game boards.
 
 ![logo](https://github.com/armhold/gocarina/blob/master/gocarina-logo.png "gocarina Logo")
 
@@ -23,7 +23,10 @@ success took 63 iterations
 success rate: 26/26 => %100.00
 ```
 
-You now have a trained neural network in `ocr.save`. You can ask it decipher game boards like this:
+You now have a trained neural network in `ocr.save`. If you got a failure message, simply try running it again;
+sometimes it takes a few attempts to get a successful training.
+
+Once you have a success network, you can ask it decipher game boards like this:
 
 `$ recognize board-images/board3.png`
 ```
@@ -98,3 +101,6 @@ Original project: "Ocarina", **OC**a**R**ina, i.e. OCR. Go + Ocarina => Gocarina
 ## Credits
 
 The file `words-en.txt` is in the Public Domain, licensed under CC0 thanks to https://github.com/atebits/Words.
+
+Letterpress® is a Registered Trademark of Atebits/Solebon. The Gocarina open-source software is in no way
+affiliated with, nor is it endorsed by, the trademark holder.

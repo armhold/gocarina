@@ -94,7 +94,7 @@ func Scale(src image.Image, r image.Rectangle) image.Image {
 	return dst
 }
 
-// for debugging images
+// ImageToString returns a textual approximation of a black & white image for debugging purposes.
 func ImageToString(img image.Image) (result string) {
 	for row := img.Bounds().Min.Y; row < img.Bounds().Max.Y; row++ {
 		for col := img.Bounds().Min.X; col < img.Bounds().Max.X; col++ {

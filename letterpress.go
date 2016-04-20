@@ -5,6 +5,7 @@ import (
 	_ "image/png" // register PNG format
 	"log"
 	"os"
+	"strings"
 )
 
 // describes the geometry of the letterpress board source images
@@ -23,7 +24,20 @@ type Board struct {
 	Tiles []*Tile
 }
 
+// ReadKnownBoard reads the given file into an image, and assigns letters to the board tiles.
+// The returned Board can be used for training a network.
 func ReadKnownBoard(file string, letters []rune) *Board {
+	return readBoard(file, letters)
+}
+
+// ReadUnknownBoard reads the given file into an image, and assigns ? characters to the board tiles.
+// The tiles from the returned board can then be sent through a (pre-trained) network to be recognized.
+func ReadUnknownBoard(file string) *Board {
+	letters := []rune(strings.Repeat("?", 25))
+	return readBoard(file, letters)
+}
+
+func readBoard(file string, letters []rune) *Board {
 	b := &Board{}
 	b.img = ReadImage(file)
 	images := b.scaleAndCrop()
@@ -35,17 +49,7 @@ func ReadKnownBoard(file string, letters []rune) *Board {
 	return b
 }
 
-func ReadUnknownBoard(file string) *Board {
-	b := &Board{}
-	b.img = ReadImage(file)
-	images := b.scaleAndCrop()
-	for _, img := range images {
-		tile := NewTile('?', img)
-		b.Tiles = append(b.Tiles, tile)
-	}
 
-	return b
-}
 
 func ReadKnownBoards() map[rune]*Tile {
 	result := make(map[rune]*Tile)
@@ -106,7 +110,6 @@ func ReadImage(file string) image.Image {
 }
 
 // crops a letterpress screen grab into a slice of tile images, one per letter.
-//
 func (b *Board) scaleAndCrop() (result []image.Image) {
 	if b.img.Bounds().Dx() != LetterPressExpectedWidth || b.img.Bounds().Dy() != LetterpressExpectedHeight {
 		log.Printf("Scaling...\n")
