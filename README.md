@@ -26,7 +26,7 @@ success rate: 26/26 => %100.00
 You now have a trained neural network in `ocr.save`. If you got a failure message, simply try running it again;
 sometimes it takes a few attempts to get a successful training.
 
-Once you have a success network, you can ask it to decipher game boards like this:
+Once you have a successfully trained network, you can ask it to decipher game boards like this:
 
 `$ recognize board-images/board3.png`
 ```

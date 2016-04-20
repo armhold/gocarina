@@ -16,12 +16,12 @@ const (
 	TileTargetHeight = 12
 )
 
-// Tile represents a lettered square from a Letterpress gameboard.
+// Tile represents a lettered square from a Letterpress game board.
 type Tile struct {
 	Letter  rune        // the letter this tile represents, if known
 	img     image.Image // the original tile image, prior to any scaling/downsampling
 	Reduced image.Image // the tile in black and white, bounding-boxed, and scaled down
-	Bounded image.Image
+	Bounded image.Image // the bounded tile (used only for debugging)
 }
 
 func NewTile(letter rune, img image.Image) (result *Tile) {
@@ -79,6 +79,7 @@ func (t *Tile) Reduce(border int) {
 
 }
 
+// Save the bounded tile. Only for debugging.
 func (t *Tile) SaveReducedTile() {
 	toFile, err := os.Create(fmt.Sprintf("debug_output/bounded_%c.png", t.Letter))
 	if err != nil {

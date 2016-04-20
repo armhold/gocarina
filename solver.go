@@ -39,10 +39,9 @@ func WordsFrom(chars string) []string {
 }
 
 // CanMakeWordFrom returns true if the characters from 'chars' can be re-ordered to form 'word', else false.
-// Leftover is OK, but letters cannot be re-used. If a given letter is needed multiple times
+// Leftover letters are OK, but individual letters cannot be re-used. If a given letter is needed multiple times
 // (e.g. 'door' needs two o's), then the letter must appear multiple times in 'chars'.
 func CanMakeWordFrom(word string, chars string) bool {
-	// turn char string into a pool of chars
 	pool := []rune(chars)
 
 	// iterate every char in word, and take them one at a time from pool
@@ -50,7 +49,7 @@ func CanMakeWordFrom(word string, chars string) bool {
 		var ok bool
 
 		if pool, ok = takeOne(pool, c); !ok {
-			// couldn't find c in p
+			// couldn't find c in pool
 			return false
 		}
 	}
@@ -59,17 +58,17 @@ func CanMakeWordFrom(word string, chars string) bool {
 	return true
 }
 
-// takeOne will remove one instance of the given char from source. It returns the (possibly modified) slice,
+// takeOne will remove one instance of the given char from pool. It returns the (possibly modified) slice,
 // and a boolean to indicate whether the char was found or not.
-func takeOne(source []rune, char rune) ([]rune, bool) {
-	for i, c := range source {
+func takeOne(pool []rune, char rune) ([]rune, bool) {
+	for i, c := range pool {
 		if c == char {
-			result := append(source[:i], source[i+1:]...)
+			result := append(pool[:i], pool[i+1:]...)
 			return result, true
 		}
 	}
 
-	return source, false
+	return pool, false
 }
 
 // Sort by word length descending, then alphabetical ascending. So bigger words come first,
