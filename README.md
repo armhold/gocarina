@@ -77,6 +77,13 @@ For convenience, we use the natural ASCII/Unicode mapping where 'A' = 65, aka 01
 outputs, corresponding to the 8 bits of our letters.
 
 
+## So can I use this as a production-ready OCR package?
+
+Doubtful. This is a more or less a toy implementation of OCR that operates on a very restricted set of input.
+It was created by an AI-hobbyist, for fun and educational purposes. However there's nothing stopping you from
+using this to learn from, and perhaps you can build something more substantial based on it.
+
+
 ## What's with the name?
 
 Original project: "Ocarina", **OC**a**R**ina, i.e. OCR. Go + Ocarina => Gocarina.
