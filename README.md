@@ -12,7 +12,7 @@ This is a Go port of the [Ruby project](https://github.com/armhold/ocarina) I di
 
 First, install the software:
 
-`$ go install github.com/armhold/gocarina/...`
+`$ go get github.com/armhold/gocarina/...`
 
 Next, we need to create and train a network. Be sure to first connect to the source directory
 (`train` expects the game boards to appear in `board-images/`):
