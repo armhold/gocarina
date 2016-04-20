@@ -1,9 +1,9 @@
 package gocarina
 
 import (
-	"testing"
 	"reflect"
 	"sort"
+	"testing"
 )
 
 func TestCanMakeWordFrom(t *testing.T) {
@@ -30,13 +30,13 @@ func TestCanMakeWordFrom(t *testing.T) {
 }
 
 func TestWordsFrom(t *testing.T) {
-	expected := []string {
+	expected := []string{
 		"bare", "bear", "brae", "arb", "are", "bar", "bra", "ear", "era", "reb", "ab", "ae", "ar", "ba", "be", "ea", "er", "re",
 	}
 
 	actual := WordsFrom("BEAR")
 
-	if ! reflect.DeepEqual(expected, actual) {
+	if !reflect.DeepEqual(expected, actual) {
 		t.Fatalf("expected: %q, actual: %q", expected, actual)
 	}
 }
@@ -47,7 +47,7 @@ func TestSortByWordLength(t *testing.T) {
 		out []string
 	}{
 		// bigger words first, but then alphabetical for equal word-lengths
-		{[]string{ "door", "dead", "darth", "dear", "apple", "a", "alpha", "zylophone", "beta", "bear"}, []string{ "zylophone", "alpha", "apple", "darth", "bear", "beta", "dead", "dear", "door", "a"}},
+		{[]string{"door", "dead", "darth", "dear", "apple", "a", "alpha", "zylophone", "beta", "bear"}, []string{"zylophone", "alpha", "apple", "darth", "bear", "beta", "dead", "dear", "door", "a"}},
 	}
 
 	for _, tt := range examples {
@@ -58,7 +58,7 @@ func TestSortByWordLength(t *testing.T) {
 		copy(actual, tt.in)
 		sort.Sort(ByWordLength(actual))
 
-		if ! reflect.DeepEqual(expected, actual) {
+		if !reflect.DeepEqual(expected, actual) {
 			t.Errorf("error for %q, wanted %q, got: %q", tt.in, expected, actual)
 		}
 	}

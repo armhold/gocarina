@@ -18,19 +18,21 @@ func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
+// Network implements a feed-forward neural network for detecting letters in bitmap images.
 type Network struct {
-	NumInputs     int // total of bits in the image
-	NumOutputs    int
-	HiddenCount   int
+	NumInputs     int         // total of bits in the image
+	NumOutputs    int         // number of bits of output; determines the range of chars we can detect
+	HiddenCount   int         // number of hidden nodes
 	InputValues   []int64     // image bits
 	InputWeights  [][]float64 // weights from inputs -> hidden nodes
 	HiddenOutputs []float64   // after feed-forward, what the hidden nodes output
 	OutputWeights [][]float64 // weights from hidden nodes -> output nodes
 	OutputValues  []float64   // after feed-forward, what the output nodes output
-	OutputErrors  []float64
-	HiddenErrors  []float64
+	OutputErrors  []float64   // error from the output nodes
+	HiddenErrors  []float64   // error from the hidden nodes
 }
 
+// NewNetwork returns a new instance of a neural network, with the given number of input nodes.
 func NewNetwork(numInputs int) *Network {
 	// NB: NumOutputs effectively constrains the range of chars that are recognizable
 	n := &Network{NumInputs: numInputs, HiddenCount: 500, NumOutputs: 8}
@@ -46,6 +48,22 @@ func NewNetwork(numInputs int) *Network {
 	return n
 }
 
+// Train trains the network by sending the given image through the network, expecting the output to be equal to r.
+func (n *Network) Train(img image.Image, r rune) {
+	// feed the image data forward through the network to obtain a result
+	//
+	n.assignInputs(img)
+	n.calculateHiddenOutputs()
+	n.calculateFinalOutputs()
+
+	// propagate the error correction backward through the net
+	//
+	n.calculateOutputErrors(r)
+	n.calculateHiddenErrors()
+	n.adjustOutputWeights()
+	n.adjustInputWeights()
+}
+
 // Attempt to recognize the character displayed on the given image.
 func (n *Network) Recognize(img image.Image) rune {
 	img = BlackWhiteImage(img)
@@ -58,7 +76,7 @@ func (n *Network) Recognize(img image.Image) rune {
 	bitstring := ""
 	for _, v := range n.OutputValues {
 		//log.Printf("v: %f", v)
-		bitstring += strconv.Itoa(Round(v))
+		bitstring += strconv.Itoa(round(v))
 	}
 
 	asciiCode, err := strconv.ParseInt(bitstring, 2, 16)
@@ -70,8 +88,42 @@ func (n *Network) Recognize(img image.Image) rune {
 	return rune(asciiCode)
 }
 
+func (n *Network) Save(filePath string) error {
+	buf := new(bytes.Buffer)
+	encoder := gob.NewEncoder(buf)
+
+	err := encoder.Encode(n)
+	if err != nil {
+		return fmt.Errorf("error encoding network: %s", err)
+	}
+
+	err = ioutil.WriteFile(filePath, buf.Bytes(), 0644)
+	if err != nil {
+		return fmt.Errorf("error writing network to file: %s", err)
+	}
+
+	return nil
+}
+
+func RestoreNetwork(filePath string) (*Network, error) {
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("error reading network file: %s", err)
+	}
+
+	decoder := gob.NewDecoder(bytes.NewBuffer(b))
+
+	var result Network
+	err = decoder.Decode(&result)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding network: %s", err)
+	}
+
+	return &result, nil
+}
+
 // can't believe this isn't in the stdlib!
-func Round(f float64) int {
+func round(f float64) int {
 	if math.Abs(f) < 0.5 {
 		return 0
 	}
@@ -214,55 +266,6 @@ func (n *Network) calculateFinalOutputs() {
 // mathematically it's supposed to be asymptotic, but large values of x may round up to 1
 func sigmoid(x float64) float64 {
 	return 1.0 / (1.0 + math.Exp(-x))
-}
-
-func (n *Network) Train(img image.Image, r rune) {
-	// feed the image data forward through the network to obtain a result
-	//
-	n.assignInputs(img)
-	n.calculateHiddenOutputs()
-	n.calculateFinalOutputs()
-
-	// propagate the error correction backward through the net
-	//
-	n.calculateOutputErrors(r)
-	n.calculateHiddenErrors()
-	n.adjustOutputWeights()
-	n.adjustInputWeights()
-}
-
-func (n *Network) Save(filePath string) error {
-	buf := new(bytes.Buffer)
-	encoder := gob.NewEncoder(buf)
-
-	err := encoder.Encode(n)
-	if err != nil {
-		return fmt.Errorf("error encoding network: %s", err)
-	}
-
-	err = ioutil.WriteFile(filePath, buf.Bytes(), 0644)
-	if err != nil {
-		return fmt.Errorf("error writing network to file: %s", err)
-	}
-
-	return nil
-}
-
-func RestoreNetwork(filePath string) (*Network, error) {
-	b, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("error reading network file: %s", err)
-	}
-
-	decoder := gob.NewDecoder(bytes.NewBuffer(b))
-
-	var result Network
-	err = decoder.Decode(&result)
-	if err != nil {
-		return nil, fmt.Errorf("error decoding network: %s", err)
-	}
-
-	return &result, nil
 }
 
 // map a rune char to an array of int, representing its unicode codepoint in binary

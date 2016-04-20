@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"log"
 	"os"
-	"strings"
 	"sort"
+	"strings"
 )
 
 // WordsFrom returns a slice of dictionary words that can be constructed from the given chars.
@@ -72,13 +72,12 @@ func takeOne(source []rune, char rune) ([]rune, bool) {
 	return source, false
 }
 
-
 // Sort by word length descending, then alphabetical ascending. So bigger words come first,
 // but equal-length words are sub-sorted alphabetically.
 type ByWordLength []string
 
-func (w ByWordLength) Len() int           { return len(w) }
-func (w ByWordLength) Swap(i, j int)      { w[i], w[j] = w[j], w[i] }
+func (w ByWordLength) Len() int      { return len(w) }
+func (w ByWordLength) Swap(i, j int) { w[i], w[j] = w[j], w[i] }
 func (w ByWordLength) Less(i, j int) bool {
 	ri := []rune(w[i])
 	rj := []rune(w[j])

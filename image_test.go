@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// just document behavior of image.Rectangle
+// just validating my understanding of image.Rectangle API
 func TestGeometry(t *testing.T) {
 	r := image.Rect(0, 0, 16, 16)
 

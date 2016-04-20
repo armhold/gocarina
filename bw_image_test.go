@@ -28,15 +28,4 @@ func TestBlackWhiteImage(t *testing.T) {
 			}
 		}
 	}
-
-	//toFile, err := os.Create("ocarina_bw.png")
-	//if err != nil {
-	//	t.Fatal(err)
-	//}
-	//defer toFile.Close()
-	//
-	//err = png.Encode(toFile, bwImg)
-	//if err != nil {
-	//	t.Fatal(err)
-	//}
 }

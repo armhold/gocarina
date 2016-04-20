@@ -90,7 +90,7 @@ func main() {
 	log.Printf("success rate: %d/%d => %%%.2f", correct, count, successPercent)
 }
 
-// fail-fast way to detect if network has 100% success rate yet
+// returns true if network has 100% success rate on training data
 func allCorrect(m map[rune]*gocarina.Tile, n *gocarina.Network) bool {
 	for r, tile := range m {
 		recognized := n.Recognize(tile.Reduced)

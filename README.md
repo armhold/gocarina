@@ -26,7 +26,7 @@ success rate: 26/26 => %100.00
 You now have a trained neural network in `ocr.save`. If you got a failure message, simply try running it again;
 sometimes it takes a few attempts to get a successful training.
 
-Once you have a success network, you can ask it decipher game boards like this:
+Once you have a success network, you can ask it to decipher game boards like this:
 
 `$ recognize board-images/board3.png`
 ```
@@ -63,7 +63,7 @@ reptiliferous
 
 We start with three "known" game boards. We split them up into individual tiles, one per letter.
 This covers the entire alphabet, and gives us our training set. We feed the training tiles into the network
-one at a time, and calculate the error value for expected vs the actual result. We do this repeatedly,
+one at a time, and calculate the error value for expected vs. the actual result. We do this repeatedly,
 until the network is trained (typically requires < 100 iterations).
 
 
@@ -94,7 +94,7 @@ have more success in adjusting the geometry values such as `LetterPressExpectedW
 
 ## What's with the name?
 
-This is a Go port of the [Ruby project](https://github.com/armhold/ocarina) I did a few years back.
+This is a Golang port of the [Ruby project](https://github.com/armhold/ocarina) I did a few years back.
 Original project: "Ocarina", **OC**a**R**ina, i.e. OCR. Go + Ocarina => Gocarina.
 
 

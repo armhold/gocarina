@@ -18,7 +18,7 @@ const (
 	LetterpressExpectedHeight = 1136
 )
 
-// Board represents a Letterpress gameboard image
+// Board represents a Letterpress game board
 type Board struct {
 	img   image.Image
 	Tiles []*Tile
@@ -39,7 +39,7 @@ func ReadUnknownBoard(file string) *Board {
 
 func readBoard(file string, letters []rune) *Board {
 	b := &Board{}
-	b.img = ReadImage(file)
+	b.img = readImage(file)
 	images := b.scaleAndCrop()
 	for i, img := range images {
 		tile := NewTile(letters[i], img)
@@ -49,8 +49,8 @@ func readBoard(file string, letters []rune) *Board {
 	return b
 }
 
-
-
+// ReadKnownBoards reads in the reference board images and assigns the known-correct letter mappings.
+// The resulting map of boards can be used to train a network.
 func ReadKnownBoards() map[rune]*Tile {
 	result := make(map[rune]*Tile)
 
@@ -94,7 +94,7 @@ func ReadKnownBoards() map[rune]*Tile {
 	return result
 }
 
-func ReadImage(file string) image.Image {
+func readImage(file string) image.Image {
 	infile, err := os.Open(file)
 	if err != nil {
 		log.Fatal(err)

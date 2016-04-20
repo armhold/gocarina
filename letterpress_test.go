@@ -7,7 +7,8 @@ import (
 	"testing"
 )
 
-func TestCrop(t *testing.T) {
+// not a true test, but writes debugging images to debug_output/**
+func TestReadKnownBoards(t *testing.T) {
 	m := ReadKnownBoards()
 
 	for letter, tile := range m {

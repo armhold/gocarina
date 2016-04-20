@@ -12,7 +12,7 @@ import (
 var (
 	boardFile   string
 	networkFile string
-	showWords bool
+	showWords   bool
 )
 
 func init() {
@@ -34,7 +34,6 @@ is also printed.
 	flag.StringVar(&networkFile, "network", "ocr.save", "the trained network file to use")
 	flag.BoolVar(&showWords, "w", false, "show list of words that can be made from the given board")
 	flag.Parse()
-
 
 	// remaining args after flags are parsed
 	args := flag.Args()
@@ -75,7 +74,6 @@ func main() {
 			line = ""
 		}
 	}
-
 
 	if showWords {
 		log.Printf("\n\n")
