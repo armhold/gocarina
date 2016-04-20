@@ -2,23 +2,29 @@
 
 ![logo](https://github.com/armhold/gocarina/blob/master/gocarina-logo.png "gocarina Logo")
 
-This is a Go port of the [Ruby project](https://github.com/armhold/ocarina) I did a few years back.
-
 Gocarina uses a neural network to do simple Optical Character Recognition (OCR).
 It's trained on [Letterpress(™)](http://www.atebits.com/letterpress) game boards.
 
+This is a Go port of the [Ruby project](https://github.com/armhold/ocarina) I did a few years back.
+
+
 ## Usage
 
-First, we need to train the network:
+First, install the software:
 
 `$ go install github.com/armhold/gocarina/...`
-`$ train -max 1000 -save ocr.save`
+
+Next, we need to create and train a network. Be sure to first connect to the source directory
+(`train` expects the game boards to appear in `board-images/`):
+
+`$ cd $GOPATH/github.com/armhold/gocarina`
+`$ train`
 
 You now have a trained neural network in `ocr.save`.
 
 Now you can ask it decipher game boards like this:
 
-`$ recognize -network ocr.save  -board board-images/board3.png`
+`$ recognize -board board-images/board3.png`
 ```
  L H F L M
  R V P U K
@@ -26,6 +32,28 @@ Now you can ask it decipher game boards like this:
  I N R I T
  V N S I Q
 ```
+
+You can also ask it to give you a list of words that can be formed with the board:
+
+`$ recognize -board board-images/board3.png -words`
+```
+ L H F L M
+ R V P U K
+ V O E E X
+ I N R I T
+ V N S I Q
+
+
+overmultiplies
+relinquishment
+feuilletonism
+fluorimetries
+interinvolves
+pluviometries
+reptiliferous
+[etc...]
+```
+
 
 
 ## How it works
@@ -51,6 +79,11 @@ more than sufficient to cover the 26 characters used in Letterpress (we could ce
 
 For convenience, we use the natural ASCII/Unicode mapping where 'A' = 65, aka 01000001. So our network has 8
 outputs, corresponding to the 8 bits of our letters.
+
+
+### What's with the name?
+
+Original project: **Oc**a**r**ina, i.e. OCR. Go + Ocarina => Gocarina.
 
 
 ###  Credits
