@@ -18,7 +18,7 @@ Next, we need to create and train a network. Be sure to first connect to the sou
 (`train` expects the game boards to appear in `board-images/`):
 
 ```
-$ cd $GOPATH/github.com/armhold/gocarina
+$ cd $GOPATH/src/github.com/armhold/gocarina
 $ train
 ```
 

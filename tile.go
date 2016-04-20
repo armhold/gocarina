@@ -58,7 +58,8 @@ func (t *Tile) Reduce(border int) {
 			SubImage(r image.Rectangle) image.Image
 		}).SubImage(bbox)
 	} else {
-		log.Printf("rune: %c: skipping boundingbox: orig width: %d, boundbox width: %d", t.Letter, t.img.Bounds().Dx(), bbox.Dx())
+		// enable only for debugging
+		//log.Printf("rune: %c: skipping boundingbox: orig width: %d, boundbox width: %d", t.Letter, t.img.Bounds().Dx(), bbox.Dx())
 	}
 
 	t.Bounded = src
