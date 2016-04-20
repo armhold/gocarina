@@ -26,7 +26,7 @@ type Board struct {
 func ReadKnownBoard(file string, letters []rune) *Board {
 	b := &Board{}
 	b.img = ReadImage(file)
-	images := b.crop()
+	images := b.scaleAndCrop()
 	for i, img := range images {
 		tile := NewTile(letters[i], img)
 		b.Tiles = append(b.Tiles, tile)
@@ -38,7 +38,7 @@ func ReadKnownBoard(file string, letters []rune) *Board {
 func ReadUnknownBoard(file string) *Board {
 	b := &Board{}
 	b.img = ReadImage(file)
-	images := b.crop()
+	images := b.scaleAndCrop()
 	for _, img := range images {
 		tile := NewTile('?', img)
 		b.Tiles = append(b.Tiles, tile)
@@ -107,7 +107,7 @@ func ReadImage(file string) image.Image {
 
 // crops a letterpress screen grab into a slice of tile images, one per letter.
 //
-func (b *Board) crop() (result []image.Image) {
+func (b *Board) scaleAndCrop() (result []image.Image) {
 	if b.img.Bounds().Dx() != LetterPressExpectedWidth || b.img.Bounds().Dy() != LetterpressExpectedHeight {
 		log.Printf("Scaling...\n")
 		b.img = Scale(b.img, image.Rect(0, 0, LetterPressExpectedWidth, LetterpressExpectedHeight))
