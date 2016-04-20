@@ -62,19 +62,19 @@ reptiliferous
 ## How it works
 
 We start with three "known" game boards. We split them up into individual tiles, one per letter.
-This covers the entire alphabet, and gives us our training set. We feed the tiles into the network one at a time,
-and calculate the error value for expected vs the actual result. We do this repeatedly, until the network
-is trained (typically requires < 100 iterations).
+This covers the entire alphabet, and gives us our training set. We feed the training tiles into the network
+one at a time, and calculate the error value for expected vs the actual result. We do this repeatedly,
+until the network is trained (typically requires < 100 iterations).
 
 
-## Representation & Encoding
+## Representation & Encoding for the Neural Network
 
 The tiles are quantized to black & white, bounding boxed, and finally scaled down to a small rectangular bitmap.
 These bits are then fed directly into the inputs of the network.
 
-We use a bit string to represent a given letter. 8 bits allows us to represent 256 different characters, which is
-more than sufficient to cover the 26 characters used in Letterpress (we could certainly get away with using only
-5 bits, but I wanted to hold the door open for potentially doing more than just Letterpress).
+We use a bit string to represent a given letter. 8 bits allows us to represent up to 256 different characters,
+which is more than sufficient to cover the 26 characters used in Letterpress (we could certainly get away
+with using only 5 bits, but I wanted to hold the door open for potentially doing more than just A-Z).
 
 For convenience, we use the natural ASCII/Unicode mapping where 'A' = 65, aka 01000001. So our network has 8
 outputs, corresponding to the 8 bits of our letters.
@@ -102,5 +102,5 @@ Original project: "Ocarina", **OC**a**R**ina, i.e. OCR. Go + Ocarina => Gocarina
 
 The file `words-en.txt` is in the Public Domain, licensed under CC0 thanks to https://github.com/atebits/Words.
 
-Letterpress® is a Registered Trademark of Atebits/Solebon. The Gocarina open-source software is in no way
+Letterpress® is a registered mark of Atebits/Solebon. The Gocarina open-source software is in no way
 affiliated with, nor is it endorsed by, the trademark holder.
