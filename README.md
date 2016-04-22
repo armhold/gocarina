@@ -63,7 +63,7 @@ reptiliferous
 
 We start with three "known" game boards. We split them up into individual tiles, one per letter.
 This covers the entire alphabet, and gives us our training set. We feed the training tiles into the network
-one at a time, and calculate the error value for expected vs. the actual result. We do this repeatedly,
+one at a time, and calculate the error value for the expected vs. the actual result. We do this repeatedly,
 until the network is trained (typically requires < 100 iterations).
 
 
