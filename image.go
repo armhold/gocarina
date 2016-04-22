@@ -3,6 +3,9 @@ package gocarina
 import (
 	"image"
 	"math"
+	"image/color"
+	"math/rand"
+	"image/draw"
 )
 
 // BoundingBox returns the minimum rectangle containing all non-white pixels in the source image.
@@ -93,6 +96,41 @@ func Scale(src image.Image, r image.Rectangle) image.Image {
 
 	return dst
 }
+
+// NoiseImage randomly alters the pixels of the given image.
+func AddNoise(img *image.RGBA) {
+	for row := img.Bounds().Min.Y; row < img.Bounds().Max.Y; row++ {
+		for col := img.Bounds().Min.X; col < img.Bounds().Max.X; col++ {
+			if rand.Float64() > 0.98 {
+				img.Set(col, row, randomColor())
+			}
+		}
+	}
+}
+
+// from http://blog.golang.org/go-imagedraw-package ("Converting an Image to RGBA"),
+// modified slightly to be a no-op if the src image is already RGBA
+//
+func ConvertToRGBA(img image.Image) (result *image.RGBA) {
+	result, ok := img.(*image.RGBA)
+	if ok {
+		return result
+	}
+
+	b := img.Bounds()
+	result = image.NewRGBA(image.Rect(0, 0, b.Dx(), b.Dy()))
+	draw.Draw(result, result.Bounds(), img, b.Min, draw.Src)
+
+	return
+}
+
+// randomColor returns a color with completely random values for RGBA.
+func randomColor() color.Color {
+	// start with non-premultiplied RGBA
+	c := color.NRGBA{R: uint8(rand.Intn(256)), G: uint8(rand.Intn(256)), B: uint8(rand.Intn(256)), A: uint8(rand.Intn(256))}
+	return color.RGBAModel.Convert(c)
+}
+
 
 // ImageToString returns a textual approximation of a black & white image for debugging purposes.
 func ImageToString(img image.Image) (result string) {
