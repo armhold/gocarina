@@ -98,11 +98,14 @@ func Scale(src image.Image, r image.Rectangle) image.Image {
 }
 
 // NoiseImage randomly alters the pixels of the given image.
+// Originally this used randomColor(), but that result in some black pixels, which totally defeats the
+// bounding box algorithm. A better BBox algorithm would be nice...
 func AddNoise(img *image.RGBA) {
 	for row := img.Bounds().Min.Y; row < img.Bounds().Max.Y; row++ {
 		for col := img.Bounds().Min.X; col < img.Bounds().Max.X; col++ {
-			if rand.Float64() > 0.98 {
-				img.Set(col, row, randomColor())
+			if rand.Float64() > 0.90 {
+				//img.Set(col, row, randomColor())
+				img.Set(col, row, color.White)
 			}
 		}
 	}
