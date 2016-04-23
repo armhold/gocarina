@@ -15,7 +15,10 @@ import (
 )
 
 const (
-	NumOutputs = 8
+	NumOutputs            = 8    // number of output bits. This constrains the range of chars that are recognizable.
+	MinBoundingBoxPercent = 0.25 // threshold width for imposing a bounding box on char width/height
+	TileTargetWidth       = 12   // tiles get scaled down to these dimensions
+	TileTargetHeight      = 12
 )
 
 func init() {
@@ -36,14 +39,8 @@ type Network struct {
 	HiddenErrors  []float64   // error from the hidden nodes
 }
 
-func (n *Network) String() string {
-	return fmt.Sprintf("NumInputs: %d, NumOutputs: %d, HiddenCount: %d", n.NumInputs, n.NumOutputs, n.HiddenCount)
-}
-
 // NewNetwork returns a new instance of a neural network, with the given number of input nodes.
 func NewNetwork(numInputs int) *Network {
-	// NB: NumOutputs effectively constrains the range of chars that are recognizable
-
 	hiddenCount := (numInputs + NumOutputs) / 2
 
 	n := &Network{NumInputs: numInputs, HiddenCount: hiddenCount, NumOutputs: NumOutputs}
@@ -57,6 +54,10 @@ func NewNetwork(numInputs int) *Network {
 	n.assignRandomWeights()
 
 	return n
+}
+
+func (n *Network) String() string {
+	return fmt.Sprintf("NumInputs: %d, NumOutputs: %d, HiddenCount: %d", n.NumInputs, n.NumOutputs, n.HiddenCount)
 }
 
 // Train trains the network by sending the given image through the network, expecting the output to be equal to r.

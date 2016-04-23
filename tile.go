@@ -8,14 +8,6 @@ import (
 	"os"
 )
 
-const (
-	MinBoundingBoxPercent = 0.25
-
-	// describes the *target* geometry of the tiles, after we have sampled them down
-	TileTargetWidth  = 12
-	TileTargetHeight = 12
-)
-
 // Tile represents a lettered square from a Letterpress game board.
 type Tile struct {
 	Letter  rune        // the letter this tile represents, if known

@@ -26,6 +26,7 @@ func TestReadKnownBoards(t *testing.T) {
 	}
 }
 
+// again, not a real test, but handy way to create a board image with noise
 func TestNoise(t *testing.T) {
 	infile, err := os.Open("board-images/board1.png")
 	if err != nil {
@@ -51,5 +52,4 @@ func TestNoise(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 }
