@@ -78,8 +78,6 @@ func (n *Network) Train(img image.Image, r rune) {
 
 // Attempt to recognize the character displayed on the given image.
 func (n *Network) Recognize(img image.Image) rune {
-	img = BlackWhiteImage(img)
-
 	n.assignInputs(img)
 	n.calculateHiddenOutputs()
 	n.calculateFinalOutputs()

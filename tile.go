@@ -18,14 +18,14 @@ type Tile struct {
 
 func NewTile(letter rune, img image.Image) (result *Tile) {
 	result = &Tile{Letter: letter, img: img}
-	result.Reduce(0)
+	result.reduce(0)
 
 	return
 }
 
 // Reduce the tile by converting to monochrome, applying a bounding box, and scaling to match the given size.
 // The resulting image will be stored in t.reducedImage
-func (t *Tile) Reduce(border int) {
+func (t *Tile) reduce(border int) {
 	targetRect := image.Rect(0, 0, TileTargetWidth, TileTargetHeight)
 	if targetRect.Dx() != TileTargetWidth {
 		log.Fatalf("expected targetRect.Dx() to be %d, got: %d", TileTargetWidth, targetRect.Dx())
@@ -57,9 +57,8 @@ func (t *Tile) Reduce(border int) {
 	t.Bounded = src
 	t.Reduced = Scale(src, targetRect)
 
-	//log.Printf("XXXXXXXXX\n")
-	//log.Printf(ImageToString(t.Reduced))
-	//log.Printf("XXXXXXXXX\n")
+	// it's sometimes helpful to see a textual version of the reduced tile
+	//log.Printf("\n%s\n", ImageToString(t.Reduced))
 
 	if t.Reduced.Bounds().Dx() != TileTargetWidth {
 		log.Fatalf("expected t.Reduced.Bounds().Dx() to be %d, got: %d", TileTargetWidth, t.Reduced.Bounds().Dx())
