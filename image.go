@@ -2,10 +2,10 @@ package gocarina
 
 import (
 	"image"
-	"math"
 	"image/color"
-	"math/rand"
 	"image/draw"
+	"math"
+	"math/rand"
 )
 
 // BoundingBox returns the minimum rectangle containing all non-white pixels in the source image.
@@ -133,7 +133,6 @@ func randomColor() color.Color {
 	c := color.NRGBA{R: uint8(rand.Intn(256)), G: uint8(rand.Intn(256)), B: uint8(rand.Intn(256)), A: uint8(rand.Intn(256))}
 	return color.RGBAModel.Convert(c)
 }
-
 
 // ImageToString returns a textual approximation of a black & white image for debugging purposes.
 func ImageToString(img image.Image) (result string) {

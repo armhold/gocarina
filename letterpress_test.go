@@ -2,10 +2,10 @@ package gocarina
 
 import (
 	"fmt"
+	"image"
 	"image/png"
 	"os"
 	"testing"
-	"image"
 )
 
 // not a true test, but writes debugging images to debug_output/**

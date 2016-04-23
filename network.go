@@ -36,7 +36,6 @@ type Network struct {
 	HiddenErrors  []float64   // error from the hidden nodes
 }
 
-
 func (n *Network) String() string {
 	return fmt.Sprintf("NumInputs: %d, NumOutputs: %d, HiddenCount: %d", n.NumInputs, n.NumOutputs, n.HiddenCount)
 }
