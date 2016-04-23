@@ -19,7 +19,8 @@ Next, we need to create and train a network. Be sure to first connect to the sou
 $ cd $GOPATH/src/github.com/armhold/gocarina
 $ train
 creating new network...
-success took 63 iterations
+Network: NumInputs: 144, NumOutputs: 8, HiddenCount: 152
+success took 58 iterations
 success rate: 26/26 => %100.00
 ```
 

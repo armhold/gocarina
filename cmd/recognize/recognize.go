@@ -45,6 +45,7 @@ is also printed.
 	boardFile = args[0]
 }
 
+// Performs OCR on the given game board file, optionally printing the words that can be constructed from the board.
 func main() {
 	log.SetFlags(0)
 

@@ -21,6 +21,7 @@ func init() {
 	flag.Parse()
 }
 
+// Trains a network on the known game boards.
 func main() {
 	log.SetFlags(0)
 
@@ -44,12 +45,11 @@ func main() {
 		if n.NumInputs != numInputs {
 			log.Fatalf("loaded network has %d inputs, tile has %d", n.NumInputs, numInputs)
 		}
-
 	} else {
 		log.Printf("creating new network...")
 		n = gocarina.NewNetwork(numInputs)
-		log.Printf("Network: %s", n)
 	}
+	log.Printf("Network: %s", n)
 
 	// save files for debugging
 	for _, tile := range m {

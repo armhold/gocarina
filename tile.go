@@ -24,7 +24,7 @@ func NewTile(letter rune, img image.Image) (result *Tile) {
 }
 
 // Reduce the tile by converting to monochrome, applying a bounding box, and scaling to match the given size.
-// The resulting image will be stored in t.reducedImage
+// The resulting image will be stored in t.Reduced.
 func (t *Tile) reduce(border int) {
 	targetRect := image.Rect(0, 0, TileTargetWidth, TileTargetHeight)
 	if targetRect.Dx() != TileTargetWidth {

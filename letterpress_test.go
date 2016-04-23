@@ -8,7 +8,8 @@ import (
 	"testing"
 )
 
-// not a true test, but writes debugging images to debug_output/**
+// no assertions, but this exercises the entire board -> tile process, and it's also useful to get
+// debugging images to written to debug_output/**
 func TestReadKnownBoards(t *testing.T) {
 	m := ReadKnownBoards()
 
@@ -26,7 +27,7 @@ func TestReadKnownBoards(t *testing.T) {
 	}
 }
 
-// Again, not a real test, but handy way to create a board image with noise. This is a way to convince yourself
+// Again, no assertions here, but handy way to create a board image with noise. This is a way to convince yourself
 // that the network is doing more than a bit-per-bit image comparison. By running the "noised" board through
 // the recognizer, we can see how it does on an image that has had some of its pixels disturbed.
 func TestNoise(t *testing.T) {
