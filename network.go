@@ -14,6 +14,10 @@ import (
 	"time"
 )
 
+const (
+	NumOutputs = 8
+)
+
 func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
@@ -23,7 +27,7 @@ type Network struct {
 	NumInputs     int         // total of bits in the image
 	NumOutputs    int         // number of bits of output; determines the range of chars we can detect
 	HiddenCount   int         // number of hidden nodes
-	InputValues   []int64     // image bits
+	InputValues   []uint8     // image bits
 	InputWeights  [][]float64 // weights from inputs -> hidden nodes
 	HiddenOutputs []float64   // after feed-forward, what the hidden nodes output
 	OutputWeights [][]float64 // weights from hidden nodes -> output nodes
@@ -32,12 +36,20 @@ type Network struct {
 	HiddenErrors  []float64   // error from the hidden nodes
 }
 
+
+func (n *Network) String() string {
+	return fmt.Sprintf("NumInputs: %d, NumOutputs: %d, HiddenCount: %d", n.NumInputs, n.NumOutputs, n.HiddenCount)
+}
+
 // NewNetwork returns a new instance of a neural network, with the given number of input nodes.
 func NewNetwork(numInputs int) *Network {
 	// NB: NumOutputs effectively constrains the range of chars that are recognizable
-	n := &Network{NumInputs: numInputs, HiddenCount: 500, NumOutputs: 8}
 
-	n.InputValues = make([]int64, n.NumInputs)
+	hiddenCount := (numInputs + NumOutputs) / 2
+
+	n := &Network{NumInputs: numInputs, HiddenCount: hiddenCount, NumOutputs: NumOutputs}
+
+	n.InputValues = make([]uint8, n.NumInputs)
 	n.OutputValues = make([]float64, n.NumOutputs)
 	n.OutputErrors = make([]float64, n.NumOutputs)
 	n.HiddenOutputs = make([]float64, n.NumOutputs)
@@ -152,7 +164,7 @@ func (n *Network) assignInputs(img image.Image) {
 	}
 }
 
-func pixelToBit(c color.Color) int64 {
+func pixelToBit(c color.Color) uint8 {
 	if IsBlack(c) {
 		return 0
 	}
