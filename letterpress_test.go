@@ -26,7 +26,9 @@ func TestReadKnownBoards(t *testing.T) {
 	}
 }
 
-// again, not a real test, but handy way to create a board image with noise
+// Again, not a real test, but handy way to create a board image with noise. This is a way to convince yourself
+// that the network is doing more than a bit-per-bit image comparison. By running the "noised" board through
+// the recognizer, we can see how it does on an image that has had some of its pixels disturbed.
 func TestNoise(t *testing.T) {
 	infile, err := os.Open("board-images/board1.png")
 	if err != nil {
