@@ -41,7 +41,7 @@ type Network struct {
 
 // NewNetwork returns a new instance of a neural network, with the given number of input nodes.
 func NewNetwork(numInputs int) *Network {
-	hiddenCount := (numInputs + NumOutputs) / 2
+	hiddenCount := numInputs + NumOutputs  // somewhat arbitrary; you should experiment with this value
 
 	n := &Network{NumInputs: numInputs, HiddenCount: hiddenCount, NumOutputs: NumOutputs}
 
