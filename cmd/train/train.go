@@ -48,11 +48,12 @@ func main() {
 	} else {
 		log.Printf("creating new network...")
 		n = gocarina.NewNetwork(numInputs)
+		log.Printf("Network: %s", n)
 	}
 
 	// save files for debugging
 	for _, tile := range m {
-		tile.SaveReducedTile()
+		tile.SaveBoundedAndReduced()
 	}
 
 	for i := 0; i < maxIter; i++ {
