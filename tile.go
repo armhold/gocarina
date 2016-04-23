@@ -26,7 +26,7 @@ type Tile struct {
 
 func NewTile(letter rune, img image.Image) (result *Tile) {
 	result = &Tile{Letter: letter, img: img}
-	result.Reduce(2)
+	result.Reduce(0)
 
 	return
 }
@@ -46,7 +46,7 @@ func (t *Tile) Reduce(border int) {
 	src := BlackWhiteImage(t.img)
 
 	// find the bounding box for the character
-	bbox := BoundingBox(src, 0)
+	bbox := BoundingBox(src, border)
 
 	// Only apply the bounding box if it's above some % of the width/height of original tile.
 	// This is to avoid pathological cases for skinny letters like "I", which
@@ -80,15 +80,20 @@ func (t *Tile) Reduce(border int) {
 }
 
 // Save the bounded tile. Only for debugging.
-func (t *Tile) SaveReducedTile() {
-	toFile, err := os.Create(fmt.Sprintf("debug_output/bounded_%c.png", t.Letter))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer toFile.Close()
+func (t *Tile) SaveBoundedAndReduced() {
+	saveImgToFile := func(file string, img image.Image) {
+		toFile, err := os.Create(file)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer toFile.Close()
 
-	err = png.Encode(toFile, t.Bounded)
-	if err != nil {
-		log.Fatal(err)
+		err = png.Encode(toFile, img)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
+
+	saveImgToFile(fmt.Sprintf("debug_output/bounded_%c.png", t.Letter), t.Bounded)
+	saveImgToFile(fmt.Sprintf("debug_output/reduced_%c.png", t.Letter), t.Reduced)
 }
