@@ -75,10 +75,9 @@ These bits are then fed directly into the inputs of the network.
 
 We use a bit string to represent a given letter. 8 bits allows us to represent up to 256 different characters,
 which is more than sufficient to cover the 26 characters used in Letterpress (we could certainly get away
-with using only 5 bits, but I wanted to hold the door open for potentially doing more than just A-Z).
-
-For convenience, we use the natural ASCII/Unicode mapping where 'A' = 65, aka 01000001. So our network has 8
-outputs, corresponding to the 8 bits of our letters.
+with using only 5 bits, but I wanted to hold the door open for potentially doing more than just A-Z). So our
+network has 8 outputs, corresponding to the 8 bits of our letters. For convenience, we use the ASCII/Unicode
+mapping where 'A' = 65, aka 01000001.
 
 
 ## Can I use this as a production-ready OCR package?
