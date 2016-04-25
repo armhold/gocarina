@@ -3,7 +3,7 @@
 Gocarina uses a neural network to do simple Optical Character Recognition (OCR).
 It's trained on [Letterpress®](http://www.atebits.com/letterpress) game boards.
 
-![logo](https://github.com/armhold/gocarina/blob/master/gocarina-logo.png "gocarina Logo")
+![LHFLM](https://github.com/armhold/gocarina/blob/master/LHFLM.png "LHFLM")
 
 
 ## Usage
