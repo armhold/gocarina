@@ -27,6 +27,9 @@ func init() {
 
 // Network implements a feed-forward neural network for detecting letters in bitmap images.
 type Network struct {
+	// TODO: much of the array allocations and math could be simplified by using matrices;
+	// Consider using github.com/gonum/matrix/mat64
+
 	NumInputs     int         // total of bits in the image
 	NumOutputs    int         // number of bits of output; determines the range of chars we can detect
 	HiddenCount   int         // number of hidden nodes
