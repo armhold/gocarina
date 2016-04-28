@@ -1,3 +1,5 @@
+
+// Package gocarina uses a neural network to implement a very simple form of OCR (Optical Character Recognition).
 package gocarina
 
 import (
