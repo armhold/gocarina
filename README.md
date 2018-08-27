@@ -8,16 +8,19 @@ It's trained on [Letterpress®](http://www.atebits.com/letterpress) game boards.
 
 ## Usage
 
-First, install the software:
+First, build the software:
 
-`$ go get github.com/armhold/gocarina/...`
+```
+$ git clone https://github.com/armhold/gocarina.git
+$ cd gocarina
+$ go build ./cmd/train && go build ./cmd/recognize
+```
 
 Next, we need to create and train a network. Be sure to first connect to the source directory
 (`train` expects the game boards to appear in `board-images/`):
 
 ```
-$ cd $GOPATH/src/github.com/armhold/gocarina
-$ train
+$ ./train
 creating new network...
 Network: NumInputs: 144, NumOutputs: 8, HiddenCount: 152
 success took 58 iterations
@@ -29,7 +32,7 @@ sometimes it takes a few attempts to get a successful training (weights are assi
 
 Once you have a successfully trained network, you can ask it to decipher game boards like this:
 
-`$ recognize board-images/board3.png`
+`$ ./recognize board-images/board3.png`
 ```
  L H F L M
  R V P U K
@@ -40,7 +43,7 @@ Once you have a successfully trained network, you can ask it to decipher game bo
 
 You can also ask it to give you a list of words that can be formed with the board:
 
-`$ recognize -w board-images/board3.png`
+`$ ./recognize -w board-images/board3.png`
 ```
  L H F L M
  R V P U K
